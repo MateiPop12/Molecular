@@ -1,0 +1,19 @@
+# Ignore binary folders
+bin/
+bin-int/
+
+# Ignore Visual Studio specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln
+*.vcxproj
+*.vcxproj.*
+*.filters
+
+# CMake buids
+cmake-*/
+
+# IDE specific folders
+.idea/

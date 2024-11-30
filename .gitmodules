@@ -1,0 +1,3 @@
+[submodule "Molecular/vendor/spdlog"]
+	path = Molecular/vendor/spdlog
+	url = https://github.com/gabime/spdlog
