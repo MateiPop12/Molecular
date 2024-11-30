@@ -1,9 +1,7 @@
 #pragma once
 
-#include <memory>
-
 #include "Core.h"
-//#include "Window.h"
+#include "Window.h"
 
 namespace Molecular
 {
@@ -15,7 +13,7 @@ namespace Molecular
 
 		void Run();
 	private:
-		//std::unique_ptr<Window> m_window;
+		std::unique_ptr<Window> m_window;
 		bool m_running = true;
 	};
 

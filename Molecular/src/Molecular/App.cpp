@@ -1,12 +1,12 @@
-// #include "molpch.h"
 #include "App.h"
-//#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
+#include "Log.h"
 
 namespace Molecular
 {
 	App::App()
 	{
-		//m_window = std::unique_ptr<Window>(Window::Create(WindowProps()));
+		m_window = std::unique_ptr<Window>(Window::Create(WindowProps()));
 	}
 	App::~App()
 	{
@@ -15,9 +15,9 @@ namespace Molecular
 	{
 		while(m_running)
 		{
-			/*glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
+			glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			m_window->OnUpdate();*/
+			m_window->OnUpdate();
 		}
 	}
 }

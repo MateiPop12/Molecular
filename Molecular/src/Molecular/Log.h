@@ -17,8 +17,11 @@ namespace Molecular
 		static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 	private:
+#pragma warning(push)
+#pragma warning(disable: 4251)
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+#pragma warning(pop)
 	};
 
 }

@@ -38,6 +38,6 @@ target_compile_definitions(Sandbox PRIVATE
 
 # Debug symbols for Debug configuration
 target_compile_options(Sandbox PRIVATE
-        $<$<CONFIG:Debug>:-g>
+#        $<$<CONFIG:Debug>:-g>
         /utf-8
 )

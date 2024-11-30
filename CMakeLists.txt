@@ -14,3 +14,4 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin-int/${OUTPUT_DIR})
 # Include subdirectories
 add_subdirectory(Molecular)
 add_subdirectory(Sandbox)
+add_subdirectory(Molecular/vendor/GLFW)

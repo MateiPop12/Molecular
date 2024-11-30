@@ -14,7 +14,12 @@ target_sources(Molecular PRIVATE ${MOLECULAR_SRC})
 # Include directories
 target_include_directories(Molecular PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/spdlog/include
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/glfw/include
+        ${CMAKE_SOURCE_DIR}/Molecular/src/Molecular
+        ${CMAKE_SOURCE_DIR}/Molecular/src
 )
+
+target_link_libraries(Molecular PRIVATE glfw opengl32)
 
 # Platform-specific settings
 if(WIN32)
@@ -37,6 +42,8 @@ target_compile_definitions(Molecular PRIVATE
 
 # Debug symbols for Debug configuration
 target_compile_options(Molecular PRIVATE
-        $<$<CONFIG:Debug>:-g>
+#        $<$<CONFIG:Debug>:-g>
         /utf-8
 )
+
+target_precompile_headers(Molecular PRIVATE ${CMAKE_SOURCE_DIR}/Molecular/src/molpch.h)
