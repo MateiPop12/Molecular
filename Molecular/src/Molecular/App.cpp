@@ -1,8 +1,7 @@
 #include "App.h"
 #include "Log.h"
 
-
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
 
 namespace Molecular
 {
@@ -15,12 +14,27 @@ namespace Molecular
 	{
 	}
 
+	void App::PushLayer(Layer* layer)
+	{
+		m_layerStack.PushLayer(layer);
+	}
+
+	void App::PushOverlay(Layer* layer)
+	{
+		m_layerStack.PushOverlay(layer);
+	}
+
 	void App::OnEvent(Event &e)
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&App::OnWindowClose, this, std::placeholders::_1));
-		//dispatcher.Dispatch<WindowResizeEvent>(std::bind(&App::OnWindowResize, this, std::placeholders::_1));
-		MOL_CORE_TRACE("{0}",e);
+
+		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
+		{
+			(*--it)->OnEvent(e);
+			if (e.Handled)
+				break;
+		}
 	}
 
 	void App::Run() 
@@ -29,6 +43,10 @@ namespace Molecular
 		{
 			glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer* layer : m_layerStack)
+				layer->OnUpdate();
+
 			m_window->OnUpdate();
 		}
 	}

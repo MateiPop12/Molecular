@@ -7,6 +7,9 @@
 #include "Events/KeyEvent.h"
 #include "Events/MouseEvent.h"
 
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
 namespace Molecular {
 
 	static uint8_t s_GLFWWindowCount = 0;
@@ -49,6 +52,8 @@ namespace Molecular {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		MOL_CORE_ASSERT(status, "Could not initialize GLAD!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
