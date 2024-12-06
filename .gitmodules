@@ -4,3 +4,6 @@
 [submodule "Molecular/vendor/glfw"]
 	path = Molecular/vendor/glfw
 	url = https://github.com/glfw/glfw
+[submodule "Molecular/vendor/imgui"]
+	path = Molecular/vendor/imgui
+	url = https://github.com/ocornut/imgui

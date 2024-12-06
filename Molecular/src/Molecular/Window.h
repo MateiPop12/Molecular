@@ -39,6 +39,6 @@ namespace Molecular {
         virtual bool IsVSync() const = 0;
 
         virtual void* GetNativeWindow() const = 0;
-        static Window* Create(const WindowProps& props);
+        static Window* Create(const WindowProps& props = WindowProps());
     };
 }

@@ -10,7 +10,6 @@ class ExampleLayer : public Molecular::Layer
 
 	void OnUpdate() override
 	{
-		MOL_INFO("Example Layer Handeled");
 	}
 
 	void OnEvent(Molecular::Event& event) override
@@ -25,6 +24,7 @@ public:
 	Sandbox() 
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Molecular::ImGuiLayer());
 	}
 	~Sandbox() 
 	{

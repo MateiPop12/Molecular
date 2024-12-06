@@ -5,8 +5,13 @@
 
 namespace Molecular
 {
+	App* App::s_Instance = nullptr;
+
 	App::App()
 	{
+		MOL_CORE_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
+
 		m_window = std::unique_ptr<Window>(Window::Create(WindowProps()));
 		m_window->SetEventCallback(std::bind(&App::OnEvent, this, std::placeholders::_1));
 	}
@@ -17,11 +22,13 @@ namespace Molecular
 	void App::PushLayer(Layer* layer)
 	{
 		m_layerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void App::PushOverlay(Layer* layer)
 	{
 		m_layerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
 	void App::OnEvent(Event &e)

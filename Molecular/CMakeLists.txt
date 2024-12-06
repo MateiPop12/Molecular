@@ -5,7 +5,11 @@ add_library(Molecular SHARED
         src/Molecular/Layer.cpp
         src/Molecular/Layer.h
         src/Molecular/LayerStack.cpp
-        src/Molecular/LayerStack.h)
+        src/Molecular/LayerStack.h
+        src/Molecular/ImGui/ImGuiLayer.cpp
+        src/Molecular/ImGui/ImGuiLayer.h
+        src/Molecular/Input.h
+)
 
 # Add source files
 file(GLOB_RECURSE MOLECULAR_SRC CONFIGURE_DEPENDS
@@ -20,11 +24,13 @@ target_include_directories(Molecular PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/spdlog/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glfw/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glad/include
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui/backends
         ${CMAKE_SOURCE_DIR}/Molecular/src/Molecular
         ${CMAKE_SOURCE_DIR}/Molecular/src
 )
 
-target_link_libraries(Molecular PRIVATE glfw glad opengl32)
+target_link_libraries(Molecular PRIVATE glfw glad ImGui opengl32)
 
 # Platform-specific settings
 if(WIN32)
