@@ -9,6 +9,10 @@ add_library(Molecular SHARED
         src/Molecular/ImGui/ImGuiLayer.cpp
         src/Molecular/ImGui/ImGuiLayer.h
         src/Molecular/Input.h
+        src/Platform/Windows/WindowsInput.cpp
+        src/Platform/Windows/WindowsInput.h
+        src/Molecular/KeyCodes.h
+        src/Molecular/MouseCodes.h
 )
 
 # Add source files

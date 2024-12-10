@@ -10,11 +10,17 @@ class ExampleLayer : public Molecular::Layer
 
 	void OnUpdate() override
 	{
+		if (Molecular::Input::IsKeyPressed(Molecular::Key::Space))
+			MOL_INFO("Space");
 	}
 
 	void OnEvent(Molecular::Event& event) override
 	{
-		MOL_TRACE("{0}",event);
+		if (event.GetEventType() == Molecular::EventType::KeyPressed)
+		{
+			Molecular::KeyPressedEvent& e = (Molecular::KeyPressedEvent&)event;
+			MOL_TRACE("{0}",(char)e.GetKeyCode());
+		}
 	}
 };
 

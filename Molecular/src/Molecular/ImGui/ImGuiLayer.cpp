@@ -1,12 +1,10 @@
 #include "ImGui/ImGuiLayer.h"
 
 #include <imgui_impl_opengl3_loader.h>
+#include <imgui_impl_opengl3.h>
 
 #include "imgui.h"
 #include "imgui_internal.h"
-
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
 
 #include "App.h"
 #include "GLFW/glfw3.h"
