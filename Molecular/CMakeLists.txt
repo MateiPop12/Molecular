@@ -14,6 +14,17 @@ add_library(Molecular STATIC
         src/Molecular/KeyCodes.h
         src/Molecular/MouseCodes.h
         src/Molecular/ImGui/ImGuiBuild.cpp
+        src/Molecular/Renderer/GraphicsContext.h
+        src/Platform/OpenGL/OpenGLContext.h
+        src/Platform/OpenGL/OpenGLContext.cpp
+        src/Molecular/Renderer/Shader.h
+        src/Molecular/Renderer/Shader.cpp
+        src/Molecular/Renderer/Buffer.h
+        src/Molecular/Renderer/Buffer.cpp
+        src/Platform/OpenGL/OpenGLBuffer.h
+        src/Platform/OpenGL/OpenGLBuffer.cpp
+        src/Molecular/Renderer/Renderer.h
+        src/Molecular/Renderer/Renderer.cpp
 )
 
 # Add source files

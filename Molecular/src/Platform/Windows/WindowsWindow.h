@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Window.h"
+#include "Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Molecular {
 
@@ -28,6 +31,7 @@ namespace Molecular {
         virtual void Shutdown();
     private:
         GLFWwindow* m_Window;
+        OpenGLContext* m_Context;
         //Scope<GraphicsContext> m_Context;
         struct WindowData
         {
