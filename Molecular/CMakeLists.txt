@@ -1,7 +1,7 @@
 project(Molecular)
 
 #Define a shared library
-add_library(Molecular SHARED
+add_library(Molecular STATIC
         src/Molecular/Layer.cpp
         src/Molecular/Layer.h
         src/Molecular/LayerStack.cpp
@@ -13,6 +13,7 @@ add_library(Molecular SHARED
         src/Platform/Windows/WindowsInput.h
         src/Molecular/KeyCodes.h
         src/Molecular/MouseCodes.h
+        src/Molecular/ImGui/ImGuiBuild.cpp
 )
 
 # Add source files
@@ -28,6 +29,7 @@ target_include_directories(Molecular PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/spdlog/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glfw/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glad/include
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/glm/glm
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui/backends
         ${CMAKE_SOURCE_DIR}/Molecular/src/Molecular

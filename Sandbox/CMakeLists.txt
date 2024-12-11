@@ -15,6 +15,7 @@ target_sources(Sandbox PRIVATE ${SANDBOX_SRC})
 target_include_directories(Sandbox PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/src
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/spdlog/include
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/glm/glm
 )
 
 # Link Molecular library

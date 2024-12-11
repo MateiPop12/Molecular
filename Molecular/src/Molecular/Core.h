@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef MOL_PLATFORM_WINDOWS
-	#ifdef MOL_BUILD_DLL	
-		#define MOLECULAR_API __declspec(dllexport)
+	#if MOL_DYNAMIC_LIBRARY
+		#ifdef MOL_BUILD_DLL
+			#define MOLECULAR_API __declspec(dllexport)
+		#else
+			#define MOLECULAR_API __declspec(dllimport)
+		#endif
 	#else
-		#define MOLECULAR_API __declspec(dllimport)
+		#define MOLECULAR_API
 	#endif
 #else
 	#error Molecular only supports Windows!

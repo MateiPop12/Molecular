@@ -16,26 +16,17 @@ namespace Molecular {
 
         void OnAttach() override;
         void OnDetach() override;
-        void OnEvent(Event& e) override;
-        void OnUpdate() override;
+        //void OnEvent(Event& e) override;
+        void OnImGuiRender() override;
 
-        void Begin();
-        void End();
-        void BlockEvents(bool block) { m_BlockEvents = block; }
-        void SetDarkThemeColors();
+        static void Begin();
+        static void End();
+        // void BlockEvents(bool block) { m_BlockEvents = block; }
+        // void SetDarkThemeColors();
 
-        uint32_t GetActiveWidgetID() const;
+        //uint32_t GetActiveWidgetID() const;
     private:
         bool m_BlockEvents = true;
-        float m_Time = 0.0f;
-
-        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
-        bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
-        bool OnMouseMoved(MouseMovedEvent& e);
-        bool OnMouseScrolled(MouseScrolledEvent& e);
-        bool OnKeyPressed(KeyPressedEvent& e);
-        bool OnKeyReleased(KeyReleasedEvent& e);
-        bool OnWindowResized(WindowResizeEvent& e);
     };
 
 }

@@ -15,6 +15,9 @@ namespace Molecular
 
 		m_window = std::unique_ptr<Window>(Window::Create(WindowProps()));
 		m_window->SetEventCallback(std::bind(&App::OnEvent, this, std::placeholders::_1));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 	App::~App()
 	{
@@ -54,6 +57,11 @@ namespace Molecular
 
 			for (Layer* layer : m_layerStack)
 				layer->OnUpdate();
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_layerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 
 			m_window->OnUpdate();
 		}

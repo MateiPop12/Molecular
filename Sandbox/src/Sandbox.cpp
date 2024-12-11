@@ -14,6 +14,13 @@ class ExampleLayer : public Molecular::Layer
 			MOL_INFO("Space");
 	}
 
+	// virtual void OnImGuiRender() override
+	// {
+	// 	ImGui::Begin("Test");;
+	// 	ImGui::Text("Hallo!");
+	// 	ImGui::End();
+	// }
+
 	void OnEvent(Molecular::Event& event) override
 	{
 		if (event.GetEventType() == Molecular::EventType::KeyPressed)
@@ -30,7 +37,6 @@ public:
 	Sandbox() 
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Molecular::ImGuiLayer());
 	}
 	~Sandbox() 
 	{
