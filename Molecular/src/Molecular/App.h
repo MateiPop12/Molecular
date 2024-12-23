@@ -9,6 +9,7 @@
 
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/Buffer.h"
+#include "Molecular/Renderer/VertexArray.h"
 
 namespace Molecular
 {
@@ -24,7 +25,7 @@ namespace Molecular
 		void PushOverlay(Layer* layer);
 
 		Window& GetWindow() { return *m_window; }
-		static App& Get() {return *s_Instance;}
+		static App& Get()	{ return *s_Instance;}
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
@@ -33,10 +34,12 @@ namespace Molecular
 		bool m_running = true;
 		LayerStack m_layerStack;
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader>			m_Shader;
-		std::unique_ptr<VertexBuffer>	m_VertexBuffer;
-		std::unique_ptr<IndexBuffer>	m_IndexBuffer;
+		std::shared_ptr<Shader>			m_Shader;
+		std::shared_ptr<VertexArray>	m_VertexArray;
+
+		std::shared_ptr<VertexArray>	m_SquareVertexArray;
+		std::shared_ptr<Shader>			m_Shader2;
+
 		static App* s_Instance;
 	};
 

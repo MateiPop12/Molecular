@@ -25,6 +25,10 @@ add_library(Molecular STATIC
         src/Platform/OpenGL/OpenGLBuffer.cpp
         src/Molecular/Renderer/Renderer.h
         src/Molecular/Renderer/Renderer.cpp
+        src/Molecular/Renderer/VertexArray.h
+        src/Molecular/Renderer/VertexArray.cpp
+        src/Platform/OpenGL/OpenGLVertexArray.h
+        src/Platform/OpenGL/OpenGLVertexArray.cpp
 )
 
 # Add source files
