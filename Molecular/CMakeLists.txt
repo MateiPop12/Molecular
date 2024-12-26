@@ -35,6 +35,8 @@ add_library(Molecular STATIC
         src/Molecular/Renderer/RenderCommand.cpp
         src/Platform/OpenGL/OpenGLRenderer.h
         src/Platform/OpenGL/OpenGLRenderer.cpp
+        src/Molecular/Renderer/OrthographicCamera.h
+        src/Molecular/Renderer/OrthographicCamera.cpp
 )
 
 # Add source files

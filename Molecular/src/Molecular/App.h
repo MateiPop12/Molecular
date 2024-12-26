@@ -10,6 +10,7 @@
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/Buffer.h"
 #include "Molecular/Renderer/VertexArray.h"
+#include "Renderer/OrthographicCamera.h"
 
 namespace Molecular
 {
@@ -39,6 +40,8 @@ namespace Molecular
 
 		std::shared_ptr<VertexArray>	m_SquareVertexArray;
 		std::shared_ptr<Shader>			m_Shader2;
+
+		OrthographicCamera m_Camera;
 
 		static App* s_Instance;
 	};
