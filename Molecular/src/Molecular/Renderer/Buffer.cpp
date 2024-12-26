@@ -12,8 +12,8 @@ namespace Molecular
     {
         switch (Renderer::GetAPI())
         {
-            case RendererAPI::None      :MOL_CORE_ASSERT(false,"RendererAPI::None not supported"); return nullptr;
-            case RendererAPI::OpenGL    :return new OpenGLVertexBuffer(vertices, size);
+            case RendererAPI::API::None      :MOL_CORE_ASSERT(false,"RendererAPI::None not supported"); return nullptr;
+            case RendererAPI::API::OpenGL    :return new OpenGLVertexBuffer(vertices, size);
         }
         MOL_CORE_ASSERT(false,"Unknown RendererAPI");
         return nullptr;
@@ -23,8 +23,8 @@ namespace Molecular
     {
         switch (Renderer::GetAPI())
         {
-        case RendererAPI::None      :MOL_CORE_ASSERT(false,"RendererAPI::None not supported"); return nullptr;
-        case RendererAPI::OpenGL    :return new OpenGLIndexBuffer(indices, size);
+        case RendererAPI::API::None      :MOL_CORE_ASSERT(false,"RendererAPI::None not supported"); return nullptr;
+        case RendererAPI::API::OpenGL    :return new OpenGLIndexBuffer(indices, size);
         }
         MOL_CORE_ASSERT(false,"Unknown RendererAPI");
         return nullptr;
