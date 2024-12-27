@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Timestep.h"
 #include "Events/Event.h"
 
 namespace Molecular {
@@ -11,7 +12,7 @@ namespace Molecular {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep timestep) {}
         virtual void OnImGuiRender() {}
         virtual void OnEvent(Event& event) {}
 
