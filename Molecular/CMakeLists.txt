@@ -38,6 +38,8 @@ add_library(Molecular STATIC
         src/Molecular/Renderer/OrthographicCamera.h
         src/Molecular/Renderer/OrthographicCamera.cpp
         src/Molecular/Core/Timestep.h
+        src/Platform/OpenGL/OpenGLShader.h
+        src/Platform/OpenGL/OpenGLShader.cpp
 )
 
 # Add source files

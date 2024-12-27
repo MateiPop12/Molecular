@@ -1,6 +1,9 @@
 #include <ext/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 #include "Molecular.h"
+#include "../../Molecular/vendor/imgui/imgui.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 class ExampleLayer : public Molecular::Layer
 {
@@ -85,7 +88,7 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Molecular::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Molecular::Shader::Create(vertexSrc, fragmentSrc));
 
 		std::string rgbShaderVertexSrc= R"(
 			#version 330 core
@@ -111,15 +114,15 @@ public:
 
 			in vec3 v_Position;
 
-			uniform vec4 u_Color;
+			uniform vec3 u_Color;
 
 			void main()
 			{
-				color = u_Color;
+				color = vec4(u_Color, 1.0);
 			}
 		)";
 
-		m_rgbShader.reset(new Molecular::Shader(rgbShaderVertexSrc, rgbShaderFragmentSrc));
+		m_rgbShader.reset(Molecular::Shader::Create(rgbShaderVertexSrc, rgbShaderFragmentSrc));
 	}
 
 	void OnUpdate(Molecular::Timestep timestep) override
@@ -148,25 +151,17 @@ public:
 		Molecular::Renderer::BeginScene(m_Camera);
 
 		const glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-		glm::vec4 red = glm::vec4(1.0f, 0.0f, 0.0f,1.0f);
-		glm::vec4 green = glm::vec4(0.0f, 1.0f, 0.0f,1.0f);
-		glm::vec4 blue = glm::vec4(0.0f, 0.0f, 1.0f,1.0f);
 
-		int i = 0;
+		std::dynamic_pointer_cast<Molecular::OpenGLShader>(m_rgbShader)->Bind();
+		std::dynamic_pointer_cast<Molecular::OpenGLShader>(m_rgbShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
 		for (int y = 0; y < 20; y++)
 		{
 			for (int x = 0; x < 20 ; x++)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f,0.0f);
 				glm::mat4 transform = translate(glm::mat4(1.0f), pos) * scale;
-				if (i % 3 == 0)
-					m_rgbShader->UploadUniformFloat4("u_Color", red);
-				else if (i%3 == 1)
-					m_rgbShader->UploadUniformFloat4("u_Color", green);
-				else if (i%3 == 2)
-					m_rgbShader->UploadUniformFloat4("u_Color", blue);
 				Molecular::Renderer::Submit(m_SquareVertexArray,m_rgbShader, transform);
-				i++;
 			}
 		}
 
@@ -177,6 +172,9 @@ public:
 
 	void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Molecular::Event& event) override
@@ -184,11 +182,11 @@ public:
 	}
 
 private:
-	std::shared_ptr<Molecular::Shader>		m_Shader;
+	std::shared_ptr<Molecular::Shader>m_Shader;
 	std::shared_ptr<Molecular::VertexArray>	m_VertexArray;
 
 	std::shared_ptr<Molecular::VertexArray>	m_SquareVertexArray;
-	std::shared_ptr<Molecular::Shader>		m_rgbShader;
+	std::shared_ptr<Molecular::Shader>m_rgbShader;
 
 	Molecular::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
@@ -197,6 +195,8 @@ private:
 	float m_CameraRotationSpeed = 0.1f;
 
 	glm::vec3 m_SquarePosition;
+
+	glm::vec3 m_SquareColor = { 0.0f, 0.0f, 1.0f };
 };
 
 class Sandbox : public Molecular::App
