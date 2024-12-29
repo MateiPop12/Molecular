@@ -18,9 +18,11 @@ namespace Molecular
 		MOL_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::Create(WindowProps()));
+		m_window = Scope<Window>(Window::Create(WindowProps()));
 		m_window->SetEventCallback(std::bind(&App::OnEvent, this, std::placeholders::_1));
 		m_window->SetVSync(false);
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);

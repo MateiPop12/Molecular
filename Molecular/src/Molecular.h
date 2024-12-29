@@ -20,6 +20,7 @@
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/OrthographicCamera.h"
 #include "Molecular/Renderer/RenderCommand.h"
+#include "Molecular/Renderer/Texture.h"
 
 //EntryPoint
 #include "Molecular/EntryPoint.h"

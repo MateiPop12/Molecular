@@ -7,14 +7,14 @@ namespace Molecular
     bool Input::IsKeyPressed(int keycode)
     {
         auto* window = static_cast<GLFWwindow*>(App::Get().GetWindow().GetNativeWindow());
-        auto state = glfwGetKey(window, static_cast<int32_t>(keycode));
+        auto state = glfwGetKey(window, keycode);
         return state == GLFW_PRESS;
     }
 
     bool Input::IsMouseButtonPressed(int button)
     {
         auto* window = static_cast<GLFWwindow*>(App::Get().GetWindow().GetNativeWindow());
-        auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
+        auto state = glfwGetMouseButton(window, button);
         return state == GLFW_PRESS;
     }
 

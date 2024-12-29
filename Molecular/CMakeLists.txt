@@ -33,13 +33,19 @@ add_library(Molecular STATIC
         src/Molecular/Renderer/rENDERERapi.cpp
         src/Molecular/Renderer/RenderCommand.h
         src/Molecular/Renderer/RenderCommand.cpp
-        src/Platform/OpenGL/OpenGLRenderer.h
-        src/Platform/OpenGL/OpenGLRenderer.cpp
+        src/Platform/OpenGL/OpenGLRendererAPI.h
+        src/Platform/OpenGL/OpenGLRendererAPI.cpp
         src/Molecular/Renderer/OrthographicCamera.h
         src/Molecular/Renderer/OrthographicCamera.cpp
         src/Molecular/Core/Timestep.h
         src/Platform/OpenGL/OpenGLShader.h
         src/Platform/OpenGL/OpenGLShader.cpp
+        src/Molecular/Renderer/Texture.h
+        src/Molecular/Renderer/Texture.cpp
+        src/Platform/OpenGL/OpenGLTexture.h
+        src/Platform/OpenGL/OpenGLTexture.cpp
+        vendor/stb_image/stb_image.h
+        vendor/stb_image/stb_image.cpp
 )
 
 # Add source files
@@ -58,6 +64,7 @@ target_include_directories(Molecular PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glm/glm
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui/backends
+        ${CMAKE_SOURCE_DIR}/Molecular/vendor/stb_image
         ${CMAKE_SOURCE_DIR}/Molecular/src/Molecular
         ${CMAKE_SOURCE_DIR}/Molecular/src
 )

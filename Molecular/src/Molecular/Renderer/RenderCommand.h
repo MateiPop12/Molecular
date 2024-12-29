@@ -8,6 +8,10 @@ namespace Molecular
     {
     public:
 
+        static void Init()
+        {
+            s_RendererAPI->Init();
+        }
         static void Clear()
         {
             s_RendererAPI->Clear();

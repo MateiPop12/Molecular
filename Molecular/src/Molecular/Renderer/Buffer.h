@@ -36,7 +36,7 @@ namespace Molecular
         uint32_t size;
         bool normalized;
 
-        BufferElement() {}
+        BufferElement() = default;
 
         BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
             :name(name), type(type), offset(0), size(ShaderDataTypeSize(type)), normalized(normalized)
@@ -49,7 +49,7 @@ namespace Molecular
             switch (type)
             {
                 case ShaderDataType::Float  :return 1;
-                case ShaderDataType::Float2 :return 1;
+                case ShaderDataType::Float2 :return 2;//2 ore jumate sa vad ca ii 1 in loc de 2
                 case ShaderDataType::Float3 :return 3;
                 case ShaderDataType::Float4 :return 4;
                 case ShaderDataType::Mat3   :return 3 * 3;
@@ -99,6 +99,7 @@ namespace Molecular
         std::vector<BufferElement> m_Elements;
         uint32_t m_Stride = 0;
     };
+
     class VertexBuffer
     {
     public:
