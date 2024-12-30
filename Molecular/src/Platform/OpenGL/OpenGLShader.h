@@ -3,12 +3,16 @@
 #include "Molecular/Renderer/Shader.h"
 #include <glm.hpp>
 
+typedef unsigned int GLenum;
+
 namespace Molecular
 {
     class OpenGLShader : public Shader
     {
     public:
         OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        OpenGLShader(const std::string& path);
+
         ~OpenGLShader();
 
         void Bind() const override;
@@ -25,6 +29,9 @@ namespace Molecular
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const;
 
     private:
+        std::string ReadFile(const std::string& path);
+        std::unordered_map<GLenum, std::string> PreProcess(const std::string& path);
+        void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
         uint32_t m_RendererID;
     };
 }

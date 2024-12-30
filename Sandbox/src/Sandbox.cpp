@@ -158,10 +158,11 @@ public:
 			}
 		)";
 
-		m_textureShader.reset(Molecular::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		//m_textureShader.reset(Molecular::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		m_textureShader.reset(Molecular::Shader::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Texture.glsl"));
 
-		m_Texture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/Checkerboard.png");
-		m_ChernoLogoTexture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/ChernoLogo.png");
+		m_Texture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/textures/Checkerboard.png");
+		m_ChernoLogoTexture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/textures/ChernoLogo.png");
 
 
 		std::dynamic_pointer_cast<Molecular::OpenGLShader>(m_textureShader)->Bind();
