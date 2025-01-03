@@ -1,3 +1,4 @@
+#include "molpch.h"
 #include "OpenGLShader.h"
 
 #include "Log.h"
@@ -16,7 +17,8 @@ namespace Molecular
 		return 0;
 	}
 
-    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+	    :m_name(name)
     {
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -29,6 +31,12 @@ namespace Molecular
     	std::string source = ReadFile(path);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
+
+		auto lastSlash = path.find_last_of("\\/");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = path.rfind(".");
+		auto count = lastDot == std::string::npos ? path.size()-lastSlash : lastDot - lastSlash;
+		m_name = path.substr(lastSlash, count);
     }
 
     OpenGLShader::~OpenGLShader()
@@ -91,7 +99,7 @@ namespace Molecular
     std::string OpenGLShader::ReadFile(const std::string& path)
     {
     	std::string source;
-    	std::ifstream in(path,std::ios::in, std::ios::binary);
+    	std::ifstream in(path,std::ios::in | std::ios::binary);
 
 		if (in)
 		{
@@ -144,7 +152,9 @@ namespace Molecular
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
     {
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs(shaderSources.size());
+		MOL_CORE_ASSERT(shaderSources.size() <= 2, "Shader source array size mismatch");
+		std::array<GLenum,2> glShaderIDs;
+		int glShaderIndex = 0;
 
 		for (auto& shaderSource : shaderSources)
 		{
@@ -175,7 +185,8 @@ namespace Molecular
 				break;
 			}
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShaderIndex++] = shader;
+
 		}
 
 		glLinkProgram(program);

@@ -9,7 +9,7 @@ class ExampleLayer : public Molecular::Layer
 {
 public:
 	ExampleLayer()
-		:Layer("Example Layer"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_SquarePosition(0.0f)
+		:Layer("Example Layer"), m_CameraController(1280.0f/720.0f)
 	{
 		m_VertexArray.reset(Molecular::VertexArray::Create());
 
@@ -89,7 +89,7 @@ public:
 			}
 		)";
 
-		m_Shader.reset(Molecular::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Molecular::Shader::Create("SimpleShader",vertexSrc, fragmentSrc);
 
 		std::string rgbShaderVertexSrc= R"(
 			#version 330 core
@@ -123,7 +123,7 @@ public:
 			}
 		)";
 
-		m_rgbShader.reset(Molecular::Shader::Create(rgbShaderVertexSrc, rgbShaderFragmentSrc));
+		m_rgbShader = Molecular::Shader::Create("TriangleShader",rgbShaderVertexSrc, rgbShaderFragmentSrc);
 
 		std::string textureShaderVertexSrc= R"(
 			#version 330 core
@@ -158,41 +158,26 @@ public:
 			}
 		)";
 
-		//m_textureShader.reset(Molecular::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
-		m_textureShader.reset(Molecular::Shader::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Texture.glsl"));
+		//m_textureShader = Molecular::Shader::Create("TextureShader",textureShaderVertexSrc, textureShaderFragmentSrc);
+		auto textureShader = m_shaderLibrary.Load("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Texture.glsl");
 
 		m_Texture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/textures/Checkerboard.png");
 		m_ChernoLogoTexture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/textures/ChernoLogo.png");
 
 
-		std::dynamic_pointer_cast<Molecular::OpenGLShader>(m_textureShader)->Bind();
-		std::dynamic_pointer_cast<Molecular::OpenGLShader>(m_textureShader)->UploadUniformInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Molecular::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Molecular::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Molecular::Timestep timestep) override
 	{
-		if (Molecular::Input::IsKeyPressed(Molecular::Key::Left))
-			m_CameraPosition.x -= m_CameraMoveSpeed * timestep.getSeconds();
-		else if (Molecular::Input::IsKeyPressed(Molecular::Key::Right))
-			m_CameraPosition.x += m_CameraMoveSpeed * timestep.getSeconds();
+		m_CameraController.OnUpdate(timestep);
 
-		if (Molecular::Input::IsKeyPressed(Molecular::Key::Down))
-			m_CameraPosition.y -= m_CameraMoveSpeed * timestep.getSeconds();
-		else if (Molecular::Input::IsKeyPressed(Molecular::Key::Up))
-			m_CameraPosition.y += m_CameraMoveSpeed * timestep.getSeconds();
-
-		if (Molecular::Input::IsKeyPressed(Molecular::Key::Z))
-			m_CameraRotation += m_CameraRotationSpeed * timestep.getSeconds();
-		else if (Molecular::Input::IsKeyPressed(Molecular::Key::X))
-			m_CameraRotation -= m_CameraRotationSpeed * timestep.getSeconds();
 
 		Molecular::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
 		Molecular::RenderCommand::Clear();
 
-		m_Camera.setPosition(m_CameraPosition);
-		m_Camera.setRotation(m_CameraRotation);
-
-		Molecular::Renderer::BeginScene(m_Camera);
+		Molecular::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		const glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -209,10 +194,12 @@ public:
 			}
 		}
 
+		auto textureShader = m_shaderLibrary.Get("Texture");
+
 		m_Texture->Bind();
-		Molecular::Renderer::Submit(m_SquareVertexArray,m_textureShader);
+		Molecular::Renderer::Submit(m_SquareVertexArray,textureShader);
 		m_ChernoLogoTexture->Bind();
-		Molecular::Renderer::Submit(m_SquareVertexArray,m_textureShader, translate(glm::mat4(1.0f), glm::vec3(-0.25f,-0.25f,0.0f)));
+		Molecular::Renderer::Submit(m_SquareVertexArray,textureShader, translate(glm::mat4(1.0f), glm::vec3(-0.25f,-0.25f,0.0f)));
 
 		//Molecular::Renderer::Submit(m_VertexArray,m_Shader);
 
@@ -228,26 +215,21 @@ public:
 
 	void OnEvent(Molecular::Event& event) override
 	{
+		m_CameraController.OnEvent(event);
 	}
 
 private:
+	Molecular::ShaderLibrary m_shaderLibrary;
 	Molecular::Ref<Molecular::VertexArray>	m_VertexArray;
 	Molecular::Ref<Molecular::VertexArray>	m_SquareVertexArray;
 
 	Molecular::Ref<Molecular::Shader>	m_Shader;
 	Molecular::Ref<Molecular::Shader>	m_rgbShader;
-	Molecular::Ref<Molecular::Shader>	m_textureShader;
+	// Molecular::Ref<Molecular::Shader>	m_textureShader;
 
 	Molecular::Ref<Molecular::Texture2D>m_Texture, m_ChernoLogoTexture;
 
-	Molecular::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 1.0f;
-	float m_CameraRotation = 0.0f;
-	float m_CameraRotationSpeed = 0.1f;
-
-	glm::vec3 m_SquarePosition;
-
+	Molecular::OrthographicCameraController m_CameraController;
 	glm::vec3 m_SquareColor = { 0.0f, 0.0f, 1.0f };
 };
 

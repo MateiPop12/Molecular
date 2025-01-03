@@ -7,6 +7,7 @@
 #include "Molecular/Input.h"
 #include "Molecular/KeyCodes.h"
 #include "Molecular/MouseCodes.h"
+#include "Molecular/OrthographicCameraController.h"
 
 #include "Molecular/Core/Timestep.h"
 

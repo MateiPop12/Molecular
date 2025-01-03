@@ -46,6 +46,8 @@ add_library(Molecular STATIC
         src/Platform/OpenGL/OpenGLTexture.cpp
         vendor/stb_image/stb_image.h
         vendor/stb_image/stb_image.cpp
+        src/Molecular/OrthographicCameraController.h
+        src/Molecular/OrthographicCameraController.cpp
 )
 
 # Add source files
