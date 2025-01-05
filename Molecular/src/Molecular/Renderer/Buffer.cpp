@@ -1,7 +1,7 @@
 #include  "molpch.h"
 #include "Molecular/Renderer/Buffer.h"
 
-#include "Core.h"
+#include "../Core/Core.h"
 #include "Molecular/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 

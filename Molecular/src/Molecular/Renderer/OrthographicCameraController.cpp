@@ -1,7 +1,7 @@
 #include "OrthographicCameraController.h"
 
-#include "Molecular/Input.h"
-#include "Molecular/KeyCodes.h"
+#include "../Core/Input.h"
+#include "../Core/KeyCodes.h"
 
 namespace Molecular
 {
@@ -56,7 +56,7 @@ namespace Molecular
 
     bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
     {
-        m_aspectRatio -= (float)e.GetWidth()/(float)e.GetHeight();
+        m_aspectRatio = (float)e.GetWidth()/(float)e.GetHeight();
         m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
         return false;
     }

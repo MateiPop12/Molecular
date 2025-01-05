@@ -6,7 +6,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-#include "App.h"
+#include "../Core/App.h"
 #include "GLFW/glfw3.h"
 
 namespace Molecular

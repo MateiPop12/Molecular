@@ -1,8 +1,8 @@
 #pragma once
 
-#include "molpch.h"
+#include "../../molpch.h"
 
-#include "Events/Event.h"
+#include "../Events/Event.h"
 
 namespace Molecular {
 

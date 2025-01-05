@@ -3,16 +3,16 @@
 #include "Core.h"
 #include "Window.h"
 #include "LayerStack.h"
-#include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "ImGui/ImGuiLayer.h"
+#include "../Events/Event.h"
+#include "../Events/ApplicationEvent.h"
+#include "../ImGui/ImGuiLayer.h"
 
-#include "Molecular/Renderer/Shader.h"
-#include "Molecular/Renderer/Buffer.h"
-#include "Molecular/Renderer/VertexArray.h"
-#include "Renderer/OrthographicCamera.h"
+#include "../Renderer/Shader.h"
+#include "../Renderer/Buffer.h"
+#include "../Renderer/VertexArray.h"
+#include "../Renderer/OrthographicCamera.h"
 
-#include "Molecular/Core/Timestep.h"
+#include "Timestep.h"
 
 namespace Molecular
 {
@@ -32,10 +32,12 @@ namespace Molecular
 
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		Scope<Window> m_window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
+		bool m_minimized = false;
 		LayerStack m_layerStack;
 		static App* s_Instance;
 		float m_lastFrameTime = 0.0f;

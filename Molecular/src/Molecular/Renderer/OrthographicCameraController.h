@@ -1,16 +1,16 @@
 #pragma once
-#include "Core/Timestep.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/Event.h"
-#include "Events/MouseEvent.h"
-#include "Renderer/OrthographicCamera.h"
+#include "../Core/Timestep.h"
+#include "../Events/ApplicationEvent.h"
+#include "../Events/Event.h"
+#include "../Events/MouseEvent.h"
+#include "OrthographicCamera.h"
 
 namespace Molecular
 {
     class OrthographicCameraController
     {
     public:
-        OrthographicCameraController(float aspectRatio, bool rotation = false);
+        explicit OrthographicCameraController(float aspectRatio, bool rotation = false);
 
         void OnUpdate(Timestep timestep);
         void OnEvent(Event& e);
@@ -18,7 +18,8 @@ namespace Molecular
         OrthographicCamera& GetCamera() {return m_camera;}
         const OrthographicCamera& GetCamera() const {return m_camera;}
 
-
+        float GetZoomLevel() const { return m_zoomLevel; }
+        void SetZoomLevel(float level) { m_zoomLevel = level; }
     private:
         bool OnMouseScrolled(MouseScrolledEvent& e);
         bool OnWindowResized(WindowResizeEvent& e);

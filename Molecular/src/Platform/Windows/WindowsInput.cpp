@@ -1,5 +1,5 @@
 #include "WindowsInput.h"
-#include "App.h"
+#include "../../Molecular/Core/App.h"
 #include <GLFW/glfw3.h>
 
 namespace Molecular

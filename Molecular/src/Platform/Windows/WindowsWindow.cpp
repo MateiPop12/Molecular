@@ -1,7 +1,7 @@
 #include "molpch.h"
 
 #include "WindowsWindow.h"
-#include "Log.h"
+#include "../../Molecular/Core/Log.h"
 
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
@@ -57,8 +57,7 @@ namespace Molecular {
 		m_Context->Init();
 
 		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		MOL_CORE_ASSERT(status, "Could not initialize GLAD!");
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
@@ -69,6 +68,7 @@ namespace Molecular {
 			data.Height = height;
 
 			WindowResizeEvent event(width, height);
+			MOL_CORE_WARN("{0} : {1}",width,height);
 			data.EventCallback(event);
 		});
 
@@ -147,6 +147,12 @@ namespace Molecular {
 	void WindowsWindow::Shutdown()
 	{
 		glfwDestroyWindow(m_Window);
+		--s_GLFWWindowCount;
+
+		if (s_GLFWWindowCount == 0)
+		{
+			glfwTerminate();
+		}
 	}
 
 	void WindowsWindow::OnUpdate()

@@ -2,17 +2,17 @@ project(Molecular)
 
 #Define a shared library
 add_library(Molecular STATIC
-        src/Molecular/Layer.cpp
-        src/Molecular/Layer.h
-        src/Molecular/LayerStack.cpp
-        src/Molecular/LayerStack.h
+        src/Molecular/Core/Layer.cpp
+        src/Molecular/Core/Layer.h
+        src/Molecular/Core/LayerStack.cpp
+        src/Molecular/Core/LayerStack.h
         src/Molecular/ImGui/ImGuiLayer.cpp
         src/Molecular/ImGui/ImGuiLayer.h
-        src/Molecular/Input.h
+        src/Molecular/Core/Input.h
         src/Platform/Windows/WindowsInput.cpp
         src/Platform/Windows/WindowsInput.h
-        src/Molecular/KeyCodes.h
-        src/Molecular/MouseCodes.h
+        src/Molecular/Core/KeyCodes.h
+        src/Molecular/Core/MouseCodes.h
         src/Molecular/ImGui/ImGuiBuild.cpp
         src/Molecular/Renderer/GraphicsContext.h
         src/Platform/OpenGL/OpenGLContext.h
@@ -46,8 +46,8 @@ add_library(Molecular STATIC
         src/Platform/OpenGL/OpenGLTexture.cpp
         vendor/stb_image/stb_image.h
         vendor/stb_image/stb_image.cpp
-        src/Molecular/OrthographicCameraController.h
-        src/Molecular/OrthographicCameraController.cpp
+        src/Molecular/Renderer/OrthographicCameraController.h
+        src/Molecular/Renderer/OrthographicCameraController.cpp
 )
 
 # Add source files

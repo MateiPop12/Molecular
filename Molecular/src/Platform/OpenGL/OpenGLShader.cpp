@@ -1,7 +1,7 @@
 #include "molpch.h"
 #include "OpenGLShader.h"
 
-#include "Log.h"
+#include "../../Molecular/Core/Log.h"
 #include "glad/glad.h"
 #include <gtc/type_ptr.hpp>
 

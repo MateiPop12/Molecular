@@ -1,14 +1,12 @@
 #pragma once
 
-//Molecular
-#include "Molecular/App.h"
-#include "Molecular/Log.h"
-#include "Molecular/Layer.h"
-#include "Molecular/Input.h"
-#include "Molecular/KeyCodes.h"
-#include "Molecular/MouseCodes.h"
-#include "Molecular/OrthographicCameraController.h"
-
+//Core
+#include "Molecular/Core/App.h"
+#include "Molecular/Core/Log.h"
+#include "Molecular/Core/Layer.h"
+#include "Molecular/Core/Input.h"
+#include "Molecular/Core/KeyCodes.h"
+#include "Molecular/Core/MouseCodes.h"
 #include "Molecular/Core/Timestep.h"
 
 //ImGui
@@ -22,6 +20,7 @@
 #include "Molecular/Renderer/OrthographicCamera.h"
 #include "Molecular/Renderer/RenderCommand.h"
 #include "Molecular/Renderer/Texture.h"
+#include "Molecular/Renderer/OrthographicCameraController.h"
 
 //EntryPoint
-#include "Molecular/EntryPoint.h"
+#include "Molecular/Core/EntryPoint.h"

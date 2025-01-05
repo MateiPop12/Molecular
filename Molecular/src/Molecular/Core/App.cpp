@@ -1,13 +1,15 @@
+#include "../../molpch.h"
 #include "App.h"
 
-#include "imgui.h"
+#include "../../../vendor/imgui/imgui.h"
 #include "Log.h"
-#include "GLFW/glfw3.h"
+#include "../../../vendor/glfw/include/GLFW/glfw3.h"
+#include "Core.h"
 
-#include "Renderer/RenderCommand.h"
-#include "Renderer/Renderer.h"
+#include "../Renderer/RenderCommand.h"
+#include "../Renderer/Renderer.h"
 
-#include "Renderer/OrthographicCamera.h"
+#include "../Renderer/OrthographicCamera.h"
 
 namespace Molecular
 {
@@ -19,7 +21,7 @@ namespace Molecular
 		s_Instance = this;
 
 		m_window = Scope<Window>(Window::Create(WindowProps()));
-		m_window->SetEventCallback(std::bind(&App::OnEvent, this, std::placeholders::_1));
+		m_window->SetEventCallback(MOL_BIND_EVENT_FN(App::OnEvent));
 		m_window->SetVSync(false);
 
 		Renderer::Init();
@@ -46,7 +48,8 @@ namespace Molecular
 	void App::OnEvent(Event &e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(std::bind(&App::OnWindowClose, this, std::placeholders::_1));
+		dispatcher.Dispatch<WindowCloseEvent>(MOL_BIND_EVENT_FN(App::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(MOL_BIND_EVENT_FN(App::OnWindowResize));
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
 		{
@@ -64,8 +67,9 @@ namespace Molecular
 			Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
-			for (Layer* layer : m_layerStack)
-				layer->OnUpdate(timestep);
+			if (!m_minimized)
+				for (Layer* layer : m_layerStack)
+					layer->OnUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_layerStack)
@@ -80,5 +84,19 @@ namespace Molecular
 	{
 		m_running = false;
 		return true;
+	}
+
+	bool App::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_minimized = true;
+			return false;
+		}
+
+		m_minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 }
