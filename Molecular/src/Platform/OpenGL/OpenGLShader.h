@@ -30,6 +30,12 @@ namespace Molecular
         void UploadUniformMat3(const std::string& name, const glm::mat3& matrix) const;
         void UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const;
 
+        void SetInt(const std::string& name, int value) override;
+        void SetFloat(const std::string& name, float value) override;
+        void SetFloat3(const std::string& name, const glm::vec3& value) override;
+        void SetFloat4(const std::string& name, const glm::vec4& value) override;
+        void SetMat4(const std::string& name, const glm::mat4& value) override;
+
     private:
         std::string ReadFile(const std::string& path);
         std::unordered_map<GLenum, std::string> PreProcess(const std::string& path);

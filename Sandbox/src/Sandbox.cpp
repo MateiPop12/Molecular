@@ -2,8 +2,11 @@
 #include <gtc/type_ptr.hpp>
 
 #include "Molecular.h"
+#include "Sandbox2D.h"
 #include "../../Molecular/vendor/imgui/imgui.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+
+#include "Molecular/Core/EntryPoint.h"
 
 class ExampleLayer : public Molecular::Layer
 {
@@ -11,7 +14,7 @@ public:
 	ExampleLayer()
 		:Layer("Example Layer"), m_CameraController(1280.0f/720.0f)
 	{
-		m_VertexArray.reset(Molecular::VertexArray::Create());
+		m_VertexArray = Molecular::VertexArray::Create();
 
 		float vertices[3*7] = {
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -19,7 +22,7 @@ public:
 			-0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
 		};
 
-		std::shared_ptr<Molecular::VertexBuffer> vertexBuffer;
+		Molecular::Ref<Molecular::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Molecular::VertexBuffer::Create(vertices,sizeof(vertices)));
 		Molecular::BufferLayout layout = {
 			{ Molecular::ShaderDataType::Float3, "a_Position" },
@@ -30,11 +33,11 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Molecular::IndexBuffer> indexBuffer;
+		Molecular::Ref<Molecular::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Molecular::IndexBuffer::Create(indices,3));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVertexArray.reset(Molecular::VertexArray::Create());
+		m_SquareVertexArray = Molecular::VertexArray::Create();
 		float vertices2[5*4] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -238,7 +241,8 @@ class Sandbox : public Molecular::App
 public:
 	Sandbox() 
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 	~Sandbox() 
 	{

@@ -48,6 +48,8 @@ add_library(Molecular STATIC
         vendor/stb_image/stb_image.cpp
         src/Molecular/Renderer/OrthographicCameraController.h
         src/Molecular/Renderer/OrthographicCameraController.cpp
+        src/Molecular/Renderer/Renderer2D.cpp
+        src/Molecular/Renderer/Renderer2D.h
 )
 
 # Add source files

@@ -15,12 +15,10 @@
 //Render
 #include "Molecular/Renderer/Buffer.h"
 #include "Molecular/Renderer/Renderer.h"
+#include "Molecular/Renderer/Renderer2D.h"
 #include "Molecular/Renderer/VertexArray.h"
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/OrthographicCamera.h"
 #include "Molecular/Renderer/RenderCommand.h"
 #include "Molecular/Renderer/Texture.h"
 #include "Molecular/Renderer/OrthographicCameraController.h"
-
-//EntryPoint
-#include "Molecular/Core/EntryPoint.h"
