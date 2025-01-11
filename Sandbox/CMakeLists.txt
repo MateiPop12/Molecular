@@ -1,9 +1,7 @@
 project(Sandbox)
 
 # Define an executable
-add_executable(Sandbox
-        src/Sandbox2D.cpp
-        src/Sandbox2D.h)
+add_executable(Sandbox)
 
 # Add source files
 file(GLOB_RECURSE SANDBOX_SRC CONFIGURE_DEPENDS
