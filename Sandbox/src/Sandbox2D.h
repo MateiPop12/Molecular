@@ -14,11 +14,13 @@ public:
     void OnImGuiRender() override;
     void OnEvent(Molecular::Event& e) override;
 private:
-    Molecular::OrthographicCameraController m_cameraController;
 
+    Molecular::OrthographicCameraController m_cameraController;
     Molecular::Ref<Molecular::Shader> m_shader;
     Molecular::Ref<Molecular::VertexArray> m_vertexArray;
     Molecular::Ref<Molecular::Texture2D> m_texture;
+
+    Molecular::PhysicsWorld m_physicsWorld;
 
     glm::vec3 m_objectColor = { 0.5f, 0.0f, 0.0f };
 };

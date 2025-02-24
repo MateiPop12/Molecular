@@ -1,7 +1,11 @@
 project(Molecular)
 
 #Define a shared library
-add_library(Molecular STATIC)
+add_library(Molecular STATIC
+        src/Molecular/Physics/PhysicsObject.h
+        src/Molecular/Physics/PhysicsObject.cpp
+        src/Molecular/Physics/PhysicsWorld.h
+        src/Molecular/Physics/PhysicsWorld.cpp)
 
 # Add source files
 file(GLOB_RECURSE MOLECULAR_SRC CONFIGURE_DEPENDS

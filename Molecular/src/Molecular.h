@@ -22,3 +22,6 @@
 #include "Molecular/Renderer/RenderCommand.h"
 #include "Molecular/Renderer/Texture.h"
 #include "Molecular/Renderer/OrthographicCameraController.h"
+
+//Physics
+#include "Molecular/Physics/PhysicsWorld.h"

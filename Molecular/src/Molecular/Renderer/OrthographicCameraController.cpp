@@ -14,21 +14,21 @@ namespace Molecular
     void OrthographicCameraController::OnUpdate(Timestep timestep)
     {
         if (Input::IsKeyPressed(Key::Left))
-            m_cameraPosition.x -= m_cameraTranslationSpeed * timestep.getSeconds();
+            m_cameraPosition.x -= m_cameraTranslationSpeed * timestep.GetSeconds();
         else if (Input::IsKeyPressed(Key::Right))
-            m_cameraPosition.x += m_cameraTranslationSpeed * timestep.getSeconds();
+            m_cameraPosition.x += m_cameraTranslationSpeed * timestep.GetSeconds();
 
         if (Input::IsKeyPressed(Key::Down))
-            m_cameraPosition.y -= m_cameraTranslationSpeed * timestep.getSeconds();
+            m_cameraPosition.y -= m_cameraTranslationSpeed * timestep.GetSeconds();
         else if (Input::IsKeyPressed(Key::Up))
-            m_cameraPosition.y += m_cameraTranslationSpeed * timestep.getSeconds();
+            m_cameraPosition.y += m_cameraTranslationSpeed * timestep.GetSeconds();
 
         if (m_rotation)
         {
             if (Input::IsKeyPressed(Key::Z))
-                m_cameraRotation += m_cameraRotationSpeed * timestep.getSeconds();
+                m_cameraRotation += m_cameraRotationSpeed * timestep.GetSeconds();
             else if (Input::IsKeyPressed(Key::X))
-                m_cameraRotation -= m_cameraRotationSpeed * timestep.getSeconds();
+                m_cameraRotation -= m_cameraRotationSpeed * timestep.GetSeconds();
 
             m_camera.setRotation(m_cameraRotation);
 
