@@ -35,7 +35,7 @@ void Sandbox2D::OnUpdate(Molecular::Timestep ts)
     Molecular::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
     for (const auto& obj : m_physicsWorld.GetObjects())
-        Molecular::Renderer2D::DrawQuad(obj.GetPosition(), { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f, 1.0f });
+        Molecular::Renderer2D::DrawCircle(obj.GetPosition(), 0.25f, { 0.0f, 0.0f, 1.0f, 1.0f });
 
     Molecular::Renderer2D::EndScene();
 
