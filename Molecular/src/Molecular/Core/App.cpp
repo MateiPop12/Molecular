@@ -61,15 +61,26 @@ namespace Molecular
 
 	void App::Run() 
 	{
+        const float fixedTimestep = 0.001f;
+        float accumulator = 0.0f;
+
 		while(m_running)
 		{
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
-			if (!m_minimized)
-				for (Layer* layer : m_layerStack)
-					layer->OnUpdate(timestep);
+            accumulator += timestep.GetSeconds();
+
+            while (accumulator >= fixedTimestep)
+            {
+                if (!m_minimized)
+                {
+                    for (Layer* layer : m_layerStack)
+                        layer->OnUpdate(fixedTimestep);
+                }
+                accumulator -= fixedTimestep;
+            }
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_layerStack)

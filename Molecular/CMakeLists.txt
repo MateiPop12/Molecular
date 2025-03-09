@@ -5,7 +5,9 @@ add_library(Molecular STATIC
         src/Molecular/Physics/PhysicsObject.h
         src/Molecular/Physics/PhysicsObject.cpp
         src/Molecular/Physics/PhysicsWorld.h
-        src/Molecular/Physics/PhysicsWorld.cpp)
+        src/Molecular/Physics/PhysicsWorld.cpp
+        src/Molecular/Physics/Atoms.h
+)
 
 # Add source files
 file(GLOB_RECURSE MOLECULAR_SRC CONFIGURE_DEPENDS
