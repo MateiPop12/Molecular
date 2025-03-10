@@ -12,6 +12,13 @@ void Molecular::PhysicsObject::ApplyForce(glm::vec2 force) {
     m_acceleration += force / m_mass; // Newton’s Second Law (F = ma)
 }
 
+void Molecular::PhysicsObject::ApplyDamping(float dampingFactor, float maxVelocity) {
+    m_velocity *= dampingFactor;
+    if (glm::length(m_velocity) > maxVelocity) {
+        m_velocity = glm::normalize(m_velocity) * maxVelocity;
+    }
+}
+
 void Molecular::PhysicsObject::Update(float ts, float boxSize) {
     m_velocity += m_acceleration * ts;
     m_position += m_velocity * ts;

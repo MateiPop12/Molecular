@@ -6,14 +6,6 @@
 
 namespace Molecular{
 
-    struct AtomProperties{
-        float mass;// atomic mass units
-        float radius;// angstroms
-        float sigma;// angstroms
-        float epsilon;// kj/mol
-        glm::vec4 color; // Atom color (RGBA)
-    };
-
     const std::unordered_map<std::string, AtomProperties> AtomDatabase = {
             {"H", {1.008f, 2.5f, 0.65f, 0.53f, glm::vec4(0.5f, 0.0f, 0.5f, 1.0f)}},  // Hydrogen (Purple)
             {"O", {16.00f, 3.0f, 0.85f, 0.60f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)}},  // Oxygen (Green)
@@ -38,30 +30,35 @@ namespace Molecular{
 
     void PhysicsWorld::Update(float ts, float boxSize) {
         ComputeLennardJonesForces();
+        SolveBonds();
         for (auto& obj : m_objects)
             obj.Update(ts,boxSize);
     }
 
     void PhysicsWorld::ComputeLennardJonesForces() {
-        const float cutoffDistance = 5.0f;
-        //const float maxForceMagnitude = 3.0f;
+        const float cutoffDistance = 3.0f;
+        const float minDistance = 0.8f;
 
         //TODO: Optimize for loop
-        for(size_t i = 0; i < m_objects.size(); ++i){
-            for(size_t j = i + 1; j < m_objects.size(); ++j){
+        for (size_t i = 0; i < m_objects.size(); ++i) {
+            for (size_t j = i + 1; j < m_objects.size(); ++j) {
                 PhysicsObject& objA = m_objects[i];
                 PhysicsObject& objB = m_objects[j];
 
                 glm::vec2 direction = objB.GetPosition() - objA.GetPosition();
                 float distanceSquared = glm::length2(direction);
-                float sigma = (objA.GetSigma() + objB.GetSigma()) / 2.0f;
-                float epsilon = sqrt(objA.GetEpsilon() * objB.GetEpsilon());
+
+                float sigma = (objA.GetSigma() + objB.GetSigma()) / 2.0f;   // Geometric mean
+                float epsilon = sqrt(objA.GetEpsilon() * objB.GetEpsilon()); // Arithmetic mean
 
                 if (distanceSquared > cutoffDistance * cutoffDistance ||
-                distanceSquared < 0.0000000000001f) continue;// Ignore far or overlapping atoms
+                    distanceSquared < 0.0001f) continue;
 
                 float distance = sqrt(distanceSquared);
-                if (distance < 0.8f * sigma) distance = 0.8f * sigma; // Prevent atoms from getting too close
+
+                if (distance < minDistance) {
+                    distance = minDistance;
+                }
 
                 glm::vec2 forceDirection = direction / distance; // Normalize
 
@@ -69,17 +66,33 @@ namespace Molecular{
                         2.0f * pow(sigma / distance, 13) - pow(sigma / distance, 7)
                 ) / distance;
 
-//                if (glm::length(forceDirection) * forceMagnitude > maxForceMagnitude) {
-//                    forceMagnitude = maxForceMagnitude / glm::length(forceDirection);  // Scale down the force
-//                }
-
                 glm::vec2 force = forceMagnitude * forceDirection;
 
-                //std::cout << "Force between atoms: (" << force.x << ", " << force.y << ")\n";
-
                 objA.ApplyForce(force);
-                objB.ApplyForce(-force); // Newton's Third Law (equal & opposite reaction)
+                objB.ApplyForce(-force);
             }
+        }
+    }
+
+    void PhysicsWorld::AddBond(size_t indexA, size_t indexB, float length, float stiffness) {
+        m_bonds.push_back({indexA, indexB, length, stiffness});
+    }
+
+    void PhysicsWorld::SolveBonds() {
+        for (auto& bond : m_bonds) {
+            PhysicsObject& objA = m_objects[bond.atomA];
+            PhysicsObject& objB = m_objects[bond.atomB];
+
+            glm::vec2 direction = objB.GetPosition() - objA.GetPosition();
+            float currentDistance = glm::length(direction);
+            if (currentDistance < 0.0001f) continue; // Prevent division by zero
+
+            float displacement = currentDistance - bond.length;
+            glm::vec2 correction = (displacement / currentDistance) * direction;
+
+            // Apply correction force proportionally
+            objA.SetPosition(objA.GetPosition() + correction * 0.5f * bond.stiffness);
+            objB.SetPosition(objB.GetPosition() - correction * 0.5f * bond.stiffness);
         }
     }
 }

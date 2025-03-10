@@ -1,6 +1,5 @@
 #include "Sandbox2D.h"
 
-#include <gtc/type_ptr.hpp>
 #include "../../Molecular/vendor/imgui/imgui.h"
 
 Sandbox2D::Sandbox2D()
@@ -10,17 +9,14 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-    //m_texture = Molecular::Texture2D::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/textures/Checkerboard.png");
+    // Create water molecule (H2O)
+    m_physicsWorld.AddObject(glm::vec2(1.01f, 1.68f), "O");  // Oxygen
+    m_physicsWorld.AddObject(glm::vec2(0.43f, -0.14f), "H"); // Hydrogen
+    m_physicsWorld.AddObject(glm::vec2(0.84f, 0.83f), "H");  // Hydrogen
 
-    // Add atoms using element symbols
-    m_physicsWorld.AddObject(glm::vec2(0.43f, -0.14f), "H");
-    m_physicsWorld.AddObject(glm::vec2(0.01f, 0.68f), "H");
-    m_physicsWorld.AddObject(glm::vec2(1.01f, 1.68f), "O");
-    m_physicsWorld.AddObject(glm::vec2(0.84f, 0.83f), "H");
-    m_physicsWorld.AddObject(glm::vec2(-0.56f, -0.53f), "O");
-    m_physicsWorld.AddObject(glm::vec2(1.75f, -1.54f), "H");
-    m_physicsWorld.AddObject(glm::vec2(2.75f, -1.54f), "H");
-    m_physicsWorld.AddObject(glm::vec2(-2.75f, -1.64f), "H");
+    // Add covalent bonds
+    m_physicsWorld.AddBond(0, 1, 0.96f, 0.5f); // O-H bond (Water molecule)
+    m_physicsWorld.AddBond(0, 2, 0.96f, 0.5f); // O-H bond (Water molecule)
 }
 
 void Sandbox2D::OnDetach()
@@ -53,7 +49,14 @@ void Sandbox2D::OnUpdate(Molecular::Timestep ts)
     Molecular::Renderer2D::DrawQuad(glm::vec2(halfBox + 0.5 , 0.0f), glm::vec2(borderThickness, boxSize + 1), {1.0f,1.0f,1.0f,1.0f});
 
     for (const auto& obj : m_physicsWorld.GetObjects())
-        Molecular::Renderer2D::DrawCircle(obj.GetPosition(), 0.5f, obj.GetColor());
+        Molecular::Renderer2D::DrawCircle(obj.GetPosition(), obj.GetRadius() * 0.2, obj.GetColor());
+
+    for (const auto& bond : m_physicsWorld.GetBonds()) {
+        const auto& objA = m_physicsWorld.GetObjects()[bond.atomA];
+        const auto& objB = m_physicsWorld.GetObjects()[bond.atomB];
+
+        Molecular::Renderer2D::DrawQuad(objA.GetPosition(), objB.GetPosition(), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    }
 
     Molecular::Renderer2D::EndScene();
 
@@ -64,15 +67,6 @@ void Sandbox2D::OnImGuiRender()
     ImGui::Begin("Atom Properties");
 
     const auto& objects = m_physicsWorld.GetObjects();
-    if (objects.size() >= 2) // Ensure at least 2 atoms exist
-    {
-        glm::vec2 posA = objects[0].GetPosition();
-        glm::vec2 posB = objects[1].GetPosition();
-        float distance = glm::distance(posA, posB);
-
-        ImGui::Separator();
-        ImGui::Text("Distance between Atom 0 and Atom 1: %.2f", distance);
-    }
 
     for (size_t i = 0; i < objects.size(); ++i)
     {

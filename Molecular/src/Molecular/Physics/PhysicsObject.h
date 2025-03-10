@@ -8,7 +8,9 @@ namespace Molecular{
         PhysicsObject(glm::vec2 pos, float mass, float radius, float sigma, float epsilon, glm::vec4 color);
 
         void ApplyForce(glm::vec2 force);
+        void ApplyDamping(float dampingFactor, float maxVelocity);
         void Update(float ts,float boxSize);
+        void SetPosition(const glm::vec2& position) { m_position = position; }
         glm::vec2 GetPosition() const { return m_position; }
 
         float GetRadius() const { return m_radius; }
@@ -24,7 +26,7 @@ namespace Molecular{
 
         glm::vec4 m_color;
 
-        float m_mass{};
+        float m_mass{};  // Atomic mass
         float m_radius;  // Atomic radius
         float m_sigma;   // Equilibrium distance
         float m_epsilon; // Strength of attraction
