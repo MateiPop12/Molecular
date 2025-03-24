@@ -24,4 +24,5 @@
 #include "Molecular/Renderer/OrthographicCameraController.h"
 
 //Physics
-#include "Molecular/Physics/PhysicsWorld.h"
+#include "Molecular/Physics/SimulationSpace.h"
+#include "Molecular/Physics/Atom.h"
