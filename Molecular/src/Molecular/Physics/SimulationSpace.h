@@ -20,6 +20,7 @@ namespace Molecular{
         void RungeKutta4(Molecular::Timestep m_timeStep, BoundingBox boundingBox);
         void BoundingBoxCollision(glm::vec2& position, glm::vec2& velocity, const BoundingBox& boundingBox);
         float CalculateTotalEnergy();
+        void Collision(Atom &a, Atom &b);
 
         const std::vector<Atom>& GetObjects() const { return m_atoms; }
         IntegrationMethod GetIntegrationMethod() const { return m_integrationMethod; }

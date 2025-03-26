@@ -11,15 +11,34 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
     m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(-1.3f, -0.1f), glm::vec2(0.0f, 0.0f), 1.0f,
+            glm::vec2(-1.2f, 0.0f), glm::vec2(0.0f, 0.0f), 1.0f,
             1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
     ));
 
     m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(1.3f, 0.1f), glm::vec2(0.0f, 0.0f), 1.0f,
+            glm::vec2(1.2f, 0.0f), glm::vec2(0.0f, 0.0f), 1.0f,
             1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
     ));
 
+    m_simulationSpace.AddObject(Molecular::Atom(
+            glm::vec2(0.0f, 2.0f), glm::vec2(0.0f, 0.0f), 1.0f,
+            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
+    ));
+
+    m_simulationSpace.AddObject(Molecular::Atom(
+            glm::vec2(0.0f, -2.3f), glm::vec2(0.0f, 0.0f), 1.0f,
+            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
+    ));
+
+    m_simulationSpace.AddObject(Molecular::Atom(
+            glm::vec2(3.0f, -2.3f), glm::vec2(0.0f, 0.0f), 1.0f,
+            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
+    ));
+
+    m_simulationSpace.AddObject(Molecular::Atom(
+            glm::vec2(-1.3f, 1.3f), glm::vec2(0.0f, 0.0f), 1.0f,
+            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
+    ));
 //    m_simulationSpace.AddObject(Molecular::Atom(
 //            glm::vec2(2.7f, 0.7f), glm::vec2(0.0f, 0.0f), 16.0f,
 //            1.52f, 1.21f, 0.2f, 3.0f   // Oxygen properties

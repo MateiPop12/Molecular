@@ -22,6 +22,10 @@ namespace Molecular{
         // Avoid division by zero, if atoms are too close
         if (r_len < 1e-5f) return glm::vec2(0.0f, 0.0f);
 
+        // Check and handle collisions (if atoms are too close)
+        Collision(const_cast<Atom&>(a), const_cast<Atom&>(b));  // We need to cast to non-const for modifying velocity
+
+
         // Lennard-Jones potential F = 48 * epsilon * ( (sigma/r)^12 - 0.5 * (sigma/r)^6 ) * r_hat
         float r6 = glm::pow(sigma / r_len, 6);
         float r12 = r6 * r6;
@@ -160,6 +164,45 @@ namespace Molecular{
             }
         }
 
-        return totalKineticEnergy + totalPotentialEnergy;
+        return abs(totalKineticEnergy + totalPotentialEnergy);
+    }
+
+    void SimulationSpace::Collision(Atom &a, Atom &b) {
+        // Calculate the vector between the two atoms' positions
+        glm::vec2 r = b.GetPosition() - a.GetPosition();
+        float r_len = glm::length(r);
+
+        // Hard limit for hydrogen atoms' collision (bond length)
+        float minDistance = (a.GetVanDerWaalsRadius() + b.GetVanDerWaalsRadius())*0.9f;
+
+        if (r_len < minDistance) {
+            // Calculate the normal vector between atoms (the line connecting their centers)
+            glm::vec2 normal = glm::normalize(r);
+
+            // Reflect the velocities based on the normal vector
+            glm::vec2 velocityA = a.GetVelocity();
+            glm::vec2 velocityB = b.GetVelocity();
+
+            // Reflection formula: v' = v - 2 * (v . n) * n
+            float dotProductA = glm::dot(velocityA, normal);
+            float dotProductB = glm::dot(velocityB, normal);
+
+            glm::vec2 reflectedVelocityA = velocityA - 2.0f * dotProductA * normal;
+            glm::vec2 reflectedVelocityB = velocityB - 2.0f * dotProductB * normal;
+
+            // Apply small energy loss (multiplying velocity by a factor less than 1)
+            float energyLossFactor = 0.999999f;  // Simulate energy loss (adjustable)
+            reflectedVelocityA *= energyLossFactor;
+            reflectedVelocityB *= energyLossFactor;
+
+            // Adjust positions to prevent overlap
+            glm::vec2 displacement = normal * (minDistance - r_len) * 0.5f;
+            a.SetPosition(a.GetPosition() - displacement);
+            b.SetPosition(b.GetPosition() + displacement);
+
+            // Set the new velocities for the atoms
+            a.SetVelocity(reflectedVelocityA);
+            b.SetVelocity(reflectedVelocityB);
+        }
     }
 }
