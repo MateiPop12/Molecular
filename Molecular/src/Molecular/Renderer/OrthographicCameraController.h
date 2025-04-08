@@ -25,7 +25,7 @@ namespace Molecular
         bool OnWindowResized(WindowResizeEvent& e);
 
         float m_aspectRatio;
-        float m_zoomLevel = 1.0f;
+        float m_zoomLevel = 3.5f;
         bool m_rotation;
 
         float m_cameraRotation = 0.0f;

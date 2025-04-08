@@ -4,45 +4,23 @@
 #include <random>
 
 Sandbox2D::Sandbox2D()
-    : Layer("Sandbox2D"), m_cameraController(1280.0f/720.0f, true)
+    : Layer("Sandbox2D"), m_cameraController(1920.0f/1080.0f, true)
 {
 }
 
 void Sandbox2D::OnAttach()
 {
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(-1.2f, 0.0f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
 
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(1.2f, 0.0f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.12f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(0.12f, 0.0f)));
+    //m_simulationSpace.AddObject(Molecular::Atom("N", glm::vec2(0.0f, 0.4f)));
+    m_simulationSpace.AddObject(Molecular::Atom("C", glm::vec2(0.9f, -0.43f)));
+    //m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.23f, 0.23f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.5f, 0.4f)));
+    //m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.5f, 0.64f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.4f, -0.84f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(1.4f, -1.4f)));
 
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(0.0f, 2.0f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
-
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(0.0f, -2.3f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
-
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(3.0f, -2.3f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
-
-    m_simulationSpace.AddObject(Molecular::Atom(
-            glm::vec2(-1.3f, 1.3f), glm::vec2(0.0f, 0.0f), 1.0f,
-            1.2f, 0.74f, 0.075f, 2.4f  // Hydrogen properties
-    ));
-//    m_simulationSpace.AddObject(Molecular::Atom(
-//            glm::vec2(2.7f, 0.7f), glm::vec2(0.0f, 0.0f), 16.0f,
-//            1.52f, 1.21f, 0.2f, 3.0f   // Oxygen properties
-//    ));
 }
 
 void Sandbox2D::OnDetach()
@@ -53,11 +31,14 @@ void Sandbox2D::OnUpdate(Molecular::Timestep ts)
 {
     m_cameraController.OnUpdate(ts);
 
-    Molecular::BoundingBox box = {glm::vec2(-5.0f, -5.0f), glm::vec2(5.0f, 5.0f)};
+    float boundingBoxSize = 1.5f;
+    Molecular::BoundingBox box = {glm::vec2(-boundingBoxSize, -boundingBoxSize), glm::vec2(boundingBoxSize, boundingBoxSize)};
     glm::vec2 minPoint = box.GetMinPoint();
     glm::vec2 maxPoint = box.GetMaxPoint();
     glm::vec4 color = {1.0f,1.0f,1.0f,1.0f};
-    float averageRadius = 1.2f;
+    float sum = 0.0f;
+    float numberOfAtoms = 0.0f;
+    float averageRadius = 0.12f;
 
     m_simulationSpace.Update(ts,box);
 
@@ -70,10 +51,15 @@ void Sandbox2D::OnUpdate(Molecular::Timestep ts)
     Molecular::Renderer2D::DrawQuad({maxPoint.x + averageRadius,abs(maxPoint.y) - abs(minPoint.y)},{0.05f,abs(maxPoint.y) + abs(minPoint.y) + (2 * averageRadius)},color);//right
     Molecular::Renderer2D::DrawQuad({minPoint.x - averageRadius,abs(maxPoint.y) - abs(minPoint.y)},{0.05f,abs(maxPoint.y) + abs(minPoint.y) + (2 * averageRadius)},color);//left
 
-    for (const Molecular::Atom& atom : m_simulationSpace.GetObjects()) {
-        glm::vec2 position = atom.GetPosition();
-        Molecular::Renderer2D::DrawCircle(position,1.2f,{0.0f,0.0f,1.0f,1.0f});
+    for (const Molecular::Atom& atom : m_simulationSpace.GetObjects())
+    {
+        Molecular::Renderer2D::DrawCircle(atom.GetPosition(),atom.GetVanDerWaalsRadius(),atom.GetColor());
+
+        sum += atom.GetVanDerWaalsRadius();
+        numberOfAtoms++;
     }
+
+    averageRadius = sum/numberOfAtoms;
 
     Molecular::Renderer2D::EndScene();
 
@@ -89,6 +75,13 @@ void Sandbox2D::OnImGuiRender()
     }
     if (ImGui::RadioButton("Runge-Kutta 4", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::RungeKutta4)) {
         m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::RungeKutta4);
+    }
+
+    double energyLoss = m_simulationSpace.GetEnergyLossFactor();
+    float energyLossF = static_cast<float>(energyLoss);  // ImGui only works with float
+
+    if (ImGui::SliderFloat("Energy Loss Factor", &energyLossF, 0.0f, 0.99f, "%.2f")) {
+        m_simulationSpace.SetEnergyLossFactor(static_cast<double>(energyLossF));
     }
 
     // Access the total energy via m_simulationSpace

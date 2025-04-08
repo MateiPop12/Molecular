@@ -10,31 +10,27 @@ namespace Molecular{
         m_atoms.push_back(atom);
     }
 
-    glm::vec2 SimulationSpace::CalculateVanDerWaalsForce(const Atom &a, const Atom &b) {
+    glm::dvec2 SimulationSpace::CalculateVanDerWaalsForce(const Atom &a, const Atom &b) {
 
-        float epsilon = (a.GetEpsilon() + b.GetEpsilon()) / 2.0f;  // Depth of the potential well for atomic hydrogen (in eV)
-        float sigma = (a.GetSigma() + b.GetSigma()) / 2.0f;     // Distance at which the potential is zero for atomic hydrogen (in Ångströms)
-        float softRepulsionThreshold = (a.GetVanDerWaalsRadius() + b.GetVanDerWaalsRadius()) / 2.0f;
+        double epsilon = (a.GetEpsilonD() + b.GetEpsilonD()) / 2.0;
+        double sigma = (a.GetSigmaD() + b.GetSigmaD()) / 2.0;
+        //double softRepulsionThreshold = (a.GetVanDerWaalsRadiusD() + b.GetVanDerWaalsRadiusD()) / 2.0;
 
-        glm::vec2 r = b.GetPosition() - a.GetPosition();
-        float r_len = glm::length(r);
+        glm::dvec2 r = b.GetPositionD() - a.GetPositionD();
+        double softening = 1e-2;
+        double r_len = glm::length(r) + softening;
 
         // Avoid division by zero, if atoms are too close
-        if (r_len < 1e-5f) return glm::vec2(0.0f, 0.0f);
-
-        // Check and handle collisions (if atoms are too close)
-        Collision(const_cast<Atom&>(a), const_cast<Atom&>(b));  // We need to cast to non-const for modifying velocity
-
+        if (r_len < 1e-10) return glm::dvec2(0.0);
 
         // Lennard-Jones potential F = 48 * epsilon * ( (sigma/r)^12 - 0.5 * (sigma/r)^6 ) * r_hat
-        float r6 = glm::pow(sigma / r_len, 6);
-        float r12 = r6 * r6;
-        float forceMag = 48.0f * epsilon * (r12 - 0.5f * r6) / (r_len * r_len);
+        double r6 = glm::pow(sigma / r_len, 6);
+        double r12 = r6 * r6;
+        double forceMag = 48.0 * epsilon * (r12 - 0.5 * r6) / (r_len * r_len);
 
-        // Soft repulsion for very close atoms
-        if (r_len < softRepulsionThreshold) {
-            float repulsionStrength = 50.0f; // Arbitrary strong repulsion factor
-            forceMag += repulsionStrength * (1.0f / r_len - 1.0f / softRepulsionThreshold);
+        const double maxForce = 1e3;
+        if (std::abs(forceMag) > maxForce) {
+            forceMag = glm::clamp(forceMag, -maxForce, maxForce);
         }
 
         return glm::normalize(r) * forceMag;
@@ -55,20 +51,21 @@ namespace Molecular{
     }
 
     void SimulationSpace::Euler(Molecular::Timestep m_timeStep, BoundingBox boundingBox) {
-        float dt = m_timeStep.GetSeconds();
+        double dt = m_timeStep.GetSeconds();
 
         for (size_t i = 0; i < m_atoms.size(); ++i) {
-            glm::vec2 totalForce(0.0f, 0.0f);
+            glm::dvec2 totalForce(0.0);
 
             for (size_t j = 0; j < m_atoms.size(); ++j) {
                 if (i != j) {
                     totalForce += CalculateVanDerWaalsForce(m_atoms[i], m_atoms[j]);
+                    Collision(m_atoms[i], m_atoms[j]);
                 }
             }
 
-            glm::vec2 acceleration = totalForce / m_atoms[i].GetMass();
-            glm::vec2 newVelocity = m_atoms[i].GetVelocity() + acceleration * dt;
-            glm::vec2 newPosition = m_atoms[i].GetPosition() + newVelocity * dt;
+            glm::dvec2 acceleration = totalForce / m_atoms[i].GetMassD();
+            glm::dvec2 newVelocity = m_atoms[i].GetVelocityD() + acceleration * dt;
+            glm::dvec2 newPosition = m_atoms[i].GetPositionD() + newVelocity * dt;
 
             BoundingBoxCollision(newPosition, newVelocity, boundingBox);
 
@@ -78,41 +75,42 @@ namespace Molecular{
     }
 
     void SimulationSpace::RungeKutta4(Molecular::Timestep m_timeStep, BoundingBox boundingBox) {
-        float dt = m_timeStep.GetSeconds();
+        double dt = m_timeStep.GetSeconds();
 
         for (size_t i = 0; i < m_atoms.size(); ++i) {
             Atom& atom = m_atoms[i];
 
-            glm::vec2 position = atom.GetPosition();
-            glm::vec2 velocity = atom.GetVelocity();
-            float mass = atom.GetMass();
+            glm::dvec2 position = atom.GetPositionD();
+            glm::dvec2 velocity = atom.GetVelocityD();
+            double mass = atom.GetMassD();
 
-            auto ComputeAcceleration = [&](glm::vec2 pos, glm::vec2 vel) -> glm::vec2 {
-                glm::vec2 totalForce(0.0f, 0.0f);
+            auto ComputeAcceleration = [&](glm::dvec2 pos, glm::dvec2 vel) -> glm::dvec2 {
+                glm::dvec2 totalForce(0.0);
                 for (size_t j = 0; j < m_atoms.size(); ++j) {
                     if (i != j) {
                         totalForce += CalculateVanDerWaalsForce(m_atoms[i], m_atoms[j]);
+                        Collision(m_atoms[i], m_atoms[j]);
                     }
                 }
                 return totalForce / mass;
             };
 
             // RungeKutta4 Steps
-            glm::vec2 k1v = ComputeAcceleration(position, velocity) * dt;
-            glm::vec2 k1x = velocity * dt;
+            glm::dvec2 k1v = ComputeAcceleration(position, velocity) * dt;
+            glm::dvec2 k1x = velocity * dt;
 
-            glm::vec2 k2v = ComputeAcceleration(position + k1x * 0.5f, velocity + k1v * 0.5f) * dt;
-            glm::vec2 k2x = (velocity + k1v * 0.5f) * dt;
+            glm::dvec2 k2v = ComputeAcceleration(position + k1x * 0.5, velocity + k1v * 0.5) * dt;
+            glm::dvec2 k2x = (velocity + k1v * 0.5) * dt;
 
-            glm::vec2 k3v = ComputeAcceleration(position + k2x * 0.5f, velocity + k2v * 0.5f) * dt;
-            glm::vec2 k3x = (velocity + k2v * 0.5f) * dt;
+            glm::dvec2 k3v = ComputeAcceleration(position + k2x * 0.5, velocity + k2v * 0.5) * dt;
+            glm::dvec2 k3x = (velocity + k2v * 0.5) * dt;
 
-            glm::vec2 k4v = ComputeAcceleration(position + k3x, velocity + k3v) * dt;
-            glm::vec2 k4x = (velocity + k3v) * dt;
+            glm::dvec2 k4v = ComputeAcceleration(position + k3x, velocity + k3v) * dt;
+            glm::dvec2 k4x = (velocity + k3v) * dt;
 
-            // Final updates
-            glm::vec2 newVelocity = velocity + (k1v + 2.0f * k2v + 2.0f * k3v + k4v) / 6.0f;
-            glm::vec2 newPosition = position + (k1x + 2.0f * k2x + 2.0f * k3x + k4x) / 6.0f;
+            // Fidnal updates
+            glm::dvec2 newVelocity = velocity + (k1v + 2.0 * k2v + 2.0 * k3v + k4v) / 6.0;
+            glm::dvec2 newPosition = position + (k1x + 2.0 * k2x + 2.0 * k3x + k4x) / 6.0;
 
             BoundingBoxCollision(newPosition, newVelocity, boundingBox);
 
@@ -121,27 +119,27 @@ namespace Molecular{
         }
     }
 
-    void SimulationSpace::BoundingBoxCollision(glm::vec2 &position, glm::vec2 &velocity, const BoundingBox &boundingBox) {
+    void SimulationSpace::BoundingBoxCollision(glm::dvec2 &position, glm::dvec2 &velocity, const BoundingBox &boundingBox) {
         if (!boundingBox.IsInside(position)) {
             if (position.x < boundingBox.GetMinPoint().x || position.x > boundingBox.GetMaxPoint().x) {
-                velocity.x *= -1.0f;
+                velocity.x *= -1.0;
             }
             if (position.y < boundingBox.GetMinPoint().y || position.y > boundingBox.GetMaxPoint().y) {
-                velocity.y *= -1.0f;
+                velocity.y *= -1.0;
             }
 
             position = glm::clamp(position, boundingBox.GetMinPoint(), boundingBox.GetMaxPoint());
         }
     }
 
-    float SimulationSpace::CalculateTotalEnergy() {
-        float totalKineticEnergy = 0.0f;
-        float totalPotentialEnergy = 0.0f;
+    double SimulationSpace::CalculateTotalEnergy() {
+        double totalKineticEnergy = 0.0;
+        double totalPotentialEnergy = 0.0;
 
         // Kinetic Energy Calculation
         for (const auto& atom : m_atoms) {
-            float speedSquared = glm::length2(atom.GetVelocity()); // v^2
-            totalKineticEnergy += 0.5f * atom.GetMass() * speedSquared;
+            double speedSquared = glm::length2(atom.GetVelocityD()); // v^2
+            totalKineticEnergy += 0.5 * atom.GetMassD() * speedSquared;
         }
 
         // Potential Energy Calculation (Pairwise)
@@ -150,16 +148,16 @@ namespace Molecular{
                 const Atom& a = m_atoms[i];
                 const Atom& b = m_atoms[j];
 
-                float epsilon = (a.GetEpsilon() + b.GetEpsilon()) / 2.0f;
-                float sigma = (a.GetSigma() + b.GetSigma()) / 2.0f;
+                double epsilon = (a.GetEpsilonD() + b.GetEpsilonD()) / 2.0;
+                double sigma = (a.GetSigmaD() + b.GetSigmaD()) / 2.0;
 
-                glm::vec2 r = b.GetPosition() - a.GetPosition();
-                float r_len = glm::length(r);
+                glm::dvec2 r = b.GetPositionD() - a.GetPositionD();
+                double r_len = glm::length(r);
 
-                if (r_len > 1e-5f) { // Avoid division by zero
-                    float r6 = glm::pow(sigma / r_len, 6);
-                    float r12 = r6 * r6;
-                    totalPotentialEnergy += 4.0f * epsilon * (r12 - r6);
+                if (r_len > 1e-10) { // Avoid division by zero
+                    double r6 = glm::pow(sigma / r_len, 6);
+                    double r12 = r6 * r6;
+                    totalPotentialEnergy += 4.0 * epsilon * (r12 - r6);
                 }
             }
         }
@@ -170,35 +168,50 @@ namespace Molecular{
     void SimulationSpace::Collision(Atom &a, Atom &b) {
         // Calculate the vector between the two atoms' positions
         glm::vec2 r = b.GetPosition() - a.GetPosition();
-        float r_len = glm::length(r);
+        double r_len = glm::length(r);
 
         // Hard limit for hydrogen atoms' collision (bond length)
-        float minDistance = (a.GetVanDerWaalsRadius() + b.GetVanDerWaalsRadius())*0.9f;
+        float minDistance = (a.GetVanDerWaalsRadiusD() + b.GetVanDerWaalsRadiusD()) * 0.9;
 
         if (r_len < minDistance) {
+            if (!a.IsBondedTo(&b) && a.GetBondCount() < maxBonds[a.GetElement()] && b.GetBondCount() < maxBonds[b.GetElement()])
+            {
+                a.AddBond(&b);
+                b.AddBond(&a);
+
+                double distance = (a.GetCovalentBondLengthD() + b.GetCovalentBondLengthD()) * 0.2;
+
+                glm::dvec2 rVec = b.GetPositionD() - a.GetPositionD();
+                double currentDistance = glm::length(rVec);
+                if (currentDistance > 1e-10) {
+                    glm::dvec2 correctionVec = glm::normalize(rVec) * ((currentDistance - distance) / 2.0);
+                    a.SetPosition(a.GetPositionD() + correctionVec);
+                    b.SetPosition(b.GetPositionD() - correctionVec);
+                }
+            }
+
             // Calculate the normal vector between atoms (the line connecting their centers)
-            glm::vec2 normal = glm::normalize(r);
+            glm::dvec2 normal = glm::normalize(r);
 
             // Reflect the velocities based on the normal vector
-            glm::vec2 velocityA = a.GetVelocity();
-            glm::vec2 velocityB = b.GetVelocity();
+            glm::dvec2 velocityA = a.GetVelocityD();
+            glm::dvec2 velocityB = b.GetVelocityD();
 
             // Reflection formula: v' = v - 2 * (v . n) * n
-            float dotProductA = glm::dot(velocityA, normal);
-            float dotProductB = glm::dot(velocityB, normal);
+            double dotProductA = glm::dot(velocityA, normal);
+            double dotProductB = glm::dot(velocityB, normal);
 
-            glm::vec2 reflectedVelocityA = velocityA - 2.0f * dotProductA * normal;
-            glm::vec2 reflectedVelocityB = velocityB - 2.0f * dotProductB * normal;
+            glm::dvec2 reflectedVelocityA = velocityA - 2.0 * dotProductA * normal;
+            glm::dvec2 reflectedVelocityB = velocityB - 2.0 * dotProductB * normal;
 
             // Apply small energy loss (multiplying velocity by a factor less than 1)
-            float energyLossFactor = 0.999999f;  // Simulate energy loss (adjustable)
-            reflectedVelocityA *= energyLossFactor;
-            reflectedVelocityB *= energyLossFactor;
+            reflectedVelocityA *= m_energyLossFactor;
+            reflectedVelocityB *= m_energyLossFactor;
 
             // Adjust positions to prevent overlap
-            glm::vec2 displacement = normal * (minDistance - r_len) * 0.5f;
-            a.SetPosition(a.GetPosition() - displacement);
-            b.SetPosition(b.GetPosition() + displacement);
+            glm::dvec2 displacement = normal * (minDistance - r_len) * 0.5;
+            a.SetPosition(a.GetPositionD() - displacement);
+            b.SetPosition(b.GetPositionD() + displacement);
 
             // Set the new velocities for the atoms
             a.SetVelocity(reflectedVelocityA);

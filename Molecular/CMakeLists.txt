@@ -3,10 +3,10 @@ project(Molecular)
 #Define a shared library
 add_library(Molecular STATIC
         src/Molecular/Physics/Atom.h
-        src/Molecular/Physics/Atom.cpp
         src/Molecular/Physics/SimulationSpace.h
         src/Molecular/Physics/SimulationSpace.cpp
         src/Molecular/Physics/BoundingBox.h
+        src/Molecular/Physics/Atom.cpp
 )
 
 # Add source files
