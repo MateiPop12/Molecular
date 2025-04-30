@@ -49,6 +49,7 @@ namespace Molecular{
 
         void SetPosition(const glm::dvec2& position) { m_position = position; }
         void SetVelocity(const glm::dvec2& velocity) { m_velocity = velocity; }
+        void SetCharge(double charge) { m_charge = charge; }
 
         double GetMassD() const { return m_mass; }
         double GetVanDerWaalsRadiusD() const { return m_vanDerWaalsRadius; }
@@ -56,6 +57,7 @@ namespace Molecular{
         double GetEpsilonD() const { return m_epsilon; }
         double GetSigmaD() const { return m_sigma; }
         double GetElectronegativity() const { return m_electronegativity; }
+        double GetCharge() const { return m_charge; }
 
         int GetValence() const { return m_valence; }
         int GetBondCount() const { return m_bond_count; }
@@ -82,6 +84,7 @@ namespace Molecular{
         double m_epsilon;               // Interaction strength (eV)
         double m_sigma;                 // Distance where potential is zero (nm)
         double m_electronegativity;     // Bonding preference
+        double m_charge = 0.0;          // Net charge (in elementary charge units, default is neutral)
         unsigned int m_valence;         // Max number of bonds allowed (valence rule)
         unsigned int m_bond_count;      // Current number of bonds
 

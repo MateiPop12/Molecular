@@ -17,8 +17,8 @@ namespace Molecular{
         void AddObject(const Atom& atom);
         void Update(Molecular::Timestep m_timeStep, BoundingBox boundingBox);
 
-        void Euler(Molecular::Timestep m_timeStep, BoundingBox boundingBox);
-        void RungeKutta4(Molecular::Timestep m_timeStep, BoundingBox boundingBox);
+        void Euler(size_t i, double dt, BoundingBox boundingBox);
+        void RungeKutta4(size_t i, double dt, BoundingBox boundingBox);
         void BoundingBoxCollision(glm::dvec2& position, glm::dvec2& velocity, const BoundingBox& boundingBox);
 
         void SetEnergyLossFactor(double energyLossFactor) { m_energyLossFactor = energyLossFactor; }
@@ -28,6 +28,7 @@ namespace Molecular{
         double CalculateTotalEnergy();
 
         glm::dvec2 CalculateVanDerWaalsForce(const Atom& a, const Atom& b);
+        glm::dvec2 CalculateCoulombForce(const Atom& a, const Atom& b);
 
         const std::vector<Atom>& GetObjects() const { return m_atoms; }
         const std::vector<float>& GetEnergyHistory() const { return m_energyHistory; }
