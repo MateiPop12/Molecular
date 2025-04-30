@@ -7,6 +7,8 @@ add_library(Molecular STATIC
         src/Molecular/Physics/SimulationSpace.cpp
         src/Molecular/Physics/BoundingBox.h
         src/Molecular/Physics/Atom.cpp
+        src/Molecular/Physics/Molecule.h
+        src/Molecular/Physics/Molecule.cpp
 )
 
 # Add source files

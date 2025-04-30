@@ -15,9 +15,9 @@ void Sandbox2D::OnAttach()
     m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(0.12f, 0.0f)));
     //m_simulationSpace.AddObject(Molecular::Atom("N", glm::vec2(0.0f, 0.4f)));
     m_simulationSpace.AddObject(Molecular::Atom("C", glm::vec2(0.9f, -0.43f)));
-    //m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.23f, 0.23f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.23f, 0.23f)));
     m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.5f, 0.4f)));
-    //m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.5f, 0.64f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.5f, 0.64f)));
     m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.4f, -0.84f)));
     m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(1.4f, -1.4f)));
 

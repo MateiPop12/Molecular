@@ -2,7 +2,6 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/norm.hpp>
-#include <Core/Log.h>
 
 namespace Molecular{
 
@@ -20,7 +19,7 @@ namespace Molecular{
         double softening = 1e-2;
         double r_len = glm::length(r) + softening;
 
-        // Avoid division by zero, if atoms are too close
+        // Avoid division by zero if atoms are too close
         if (r_len < 1e-10) return glm::dvec2(0.0);
 
         // Lennard-Jones potential F = 48 * epsilon * ( (sigma/r)^12 - 0.5 * (sigma/r)^6 ) * r_hat
@@ -108,7 +107,7 @@ namespace Molecular{
             glm::dvec2 k4v = ComputeAcceleration(position + k3x, velocity + k3v) * dt;
             glm::dvec2 k4x = (velocity + k3v) * dt;
 
-            // Fidnal updates
+            // Final updates
             glm::dvec2 newVelocity = velocity + (k1v + 2.0 * k2v + 2.0 * k3v + k4v) / 6.0;
             glm::dvec2 newPosition = position + (k1x + 2.0 * k2x + 2.0 * k3x + k4x) / 6.0;
 
@@ -174,22 +173,6 @@ namespace Molecular{
         float minDistance = (a.GetVanDerWaalsRadiusD() + b.GetVanDerWaalsRadiusD()) * 0.9;
 
         if (r_len < minDistance) {
-            if (!a.IsBondedTo(&b) && a.GetBondCount() < maxBonds[a.GetElement()] && b.GetBondCount() < maxBonds[b.GetElement()])
-            {
-                a.AddBond(&b);
-                b.AddBond(&a);
-
-                double distance = (a.GetCovalentBondLengthD() + b.GetCovalentBondLengthD()) * 0.2;
-
-                glm::dvec2 rVec = b.GetPositionD() - a.GetPositionD();
-                double currentDistance = glm::length(rVec);
-                if (currentDistance > 1e-10) {
-                    glm::dvec2 correctionVec = glm::normalize(rVec) * ((currentDistance - distance) / 2.0);
-                    a.SetPosition(a.GetPositionD() + correctionVec);
-                    b.SetPosition(b.GetPositionD() - correctionVec);
-                }
-            }
-
             // Calculate the normal vector between atoms (the line connecting their centers)
             glm::dvec2 normal = glm::normalize(r);
 

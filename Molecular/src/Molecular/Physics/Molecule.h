@@ -1,8 +1,23 @@
-//
-// Created by matei on 4/9/2025.
-//
+#pragma once
 
-#ifndef MOLECULARWORKSPACE_MOLECULE_H
-#define MOLECULARWORKSPACE_MOLECULE_H
+#include "Atom.h"
 
-#endif //MOLECULARWORKSPACE_MOLECULE_H
+namespace Molecular{
+//    class Molecule {
+//    public:
+//        Molecule() = default;
+//
+//        void AddAtom(Atom* atom);
+//        bool CanAcceptAtom(const Atom& atom) const;
+//        bool TryBondAtoms(Atom* a, Atom* b);
+//        bool ContainsAtom(const Atom* atom) const;
+//
+//        std::vector<Atom*>& GetAtoms() { return m_atoms; }
+//        const std::vector<Atom*>& GetAtoms() const { return m_atoms; }
+//
+//    private:
+//        std::vector<Atom*> m_atoms;
+//
+//        bool HasFreeBondSlots(Atom* atom) const;
+//    };
+}
