@@ -9,9 +9,16 @@ namespace Molecular{
 
     void SimulationSpace::AddObject(const Atom &atom) {
         m_atoms.push_back(atom);
+        if (!m_isRunning) {
+            m_initialAtoms.push_back(atom);
+        }
     }
 
     void SimulationSpace::Update(Molecular::Timestep m_timeStep, BoundingBox boundingBox) {
+
+        if (!m_isRunning) {
+            return;
+        }
 
         double dt = m_timeStep.GetSeconds();
         for (size_t i = 0; i < m_atoms.size(); ++i) {
@@ -27,6 +34,43 @@ namespace Molecular{
             m_energyHistory.erase(m_energyHistory.begin()); // Remove oldest entry
         }
         m_energyHistory.push_back(energy);
+    }
+
+    void SimulationSpace::ResetSimulation() {
+
+        StopSimulation();
+        ResetToInitialPositions();
+        m_energyHistory.clear();
+        for (auto& atom : m_atoms) {
+            atom.GetBondedAtoms().clear();
+        }
+    }
+
+    void SimulationSpace::ClearAllAtoms() {
+        StopSimulation();
+        m_atoms.clear();
+        m_initialAtoms.clear();
+        m_energyHistory.clear();
+    }
+
+    void SimulationSpace::ResetToInitialPositions() {
+        if (m_initialAtoms.size() == m_atoms.size()) {
+            // Reset positions and velocities to initial state
+            for (size_t i = 0; i < m_atoms.size(); ++i) {
+                m_atoms[i].SetPosition(m_initialAtoms[i].GetPositionD());
+                m_atoms[i].SetVelocity(m_initialAtoms[i].GetVelocityD());
+                m_atoms[i].SetCharge(m_initialAtoms[i].GetCharge());
+                // Clear bonds
+                m_atoms[i].GetBondedAtoms().clear();
+            }
+        }
+    }
+
+    void SimulationSpace::SaveInitialState() {
+        m_initialAtoms.clear();
+        for (const auto& atom : m_atoms) {
+            m_initialAtoms.push_back(atom);
+        }
     }
 
     void SimulationSpace::BoundingBoxCollision(glm::dvec2 &position, glm::dvec2 &velocity, const BoundingBox &boundingBox) {
@@ -48,7 +92,12 @@ namespace Molecular{
         double r_len = glm::length(r);
 
         // Hard limit for hydrogen atoms' collision (bond length)
-        float minDistance = (a.GetVanDerWaalsRadiusD() + b.GetVanDerWaalsRadiusD()) * 0.9;
+        float minDistance;
+        if (a.IsBondedTo(&b)) {
+            minDistance = (a.GetCovalentBondLengthD() + b.GetCovalentBondLengthD()) * 0.5f;
+        } else {
+            minDistance = (a.GetVanDerWaalsRadiusD() + b.GetVanDerWaalsRadiusD()) * 0.9f;
+        }
 
         if (r_len < minDistance) {
             // Calculate the normal vector between atoms (the line connecting their centers)
@@ -203,19 +252,73 @@ namespace Molecular{
 
         return glm::normalize(r) * forceMag;
     }
+
     glm::dvec2 SimulationSpace::CalculateCoulombForce(const Atom& a, const Atom& b) {
         constexpr double k_e = 8.9875517873681764e9; // Coulomb's constant in N·m²/C²
         constexpr double elementaryCharge = 1.602176634e-19; // Coulomb
+
+        constexpr double softening = 1e-10;     // Softens singularity at r ≈ 0
+        constexpr double dielectric = 1.0;      // Relative permittivity (1.0 = vacuum)
 
         glm::dvec2 r = b.GetPositionD() - a.GetPositionD();
         double r_len = glm::length(r) + 1e-10; // prevent division by zero
 
         if (r_len < 1e-10) return glm::dvec2(0.0);
 
+        double softenedR = r_len + softening;
+
         double q1 = a.GetCharge() * elementaryCharge;
         double q2 = b.GetCharge() * elementaryCharge;
 
-        double forceMagnitude = k_e * (q1 * q2) / (r_len * r_len);
+        double forceMagnitude = (k_e * q1 * q2) / (dielectric * softenedR * softenedR);
+
         return glm::normalize(r) * forceMagnitude;
+    }
+
+    void SimulationSpace::UpdateBonds() {
+        if (!m_isRunning) return;
+
+        // Check for new bond formation and bond breaking
+        for (size_t i = 0; i < m_atoms.size(); ++i) {
+            for (size_t j = i + 1; j < m_atoms.size(); ++j) {
+                Atom& atomA = m_atoms[i];
+                Atom& atomB = m_atoms[j];
+
+                // Try to form new bonds
+                if (!atomA.IsBondedTo(&atomB)) {
+                    atomA.TryFormBond(&atomB);
+                }
+                    // Check if existing bonds should break
+                else if (atomA.ShouldBreakBondWith(&atomB)) {
+                    atomA.BreakBond(&atomB);
+                }
+            }
+        }
+    }
+
+    int SimulationSpace::GetTotalBondCount() const {
+        int totalBonds = 0;
+        for (const auto& atom : m_atoms) {
+            totalBonds += atom.GetBonds().size();
+        }
+        return totalBonds / 2; // Each bond is counted twice
+    }
+
+    std::vector<std::pair<size_t, size_t>> SimulationSpace::GetBondPairs() const {
+        std::vector<std::pair<size_t, size_t>> bonds;
+
+        for (size_t i = 0; i < m_atoms.size(); ++i) {
+            for (const auto* bondedAtom : m_atoms[i].GetBonds()) {
+                // Find the index of the bonded atom
+                for (size_t j = i + 1; j < m_atoms.size(); ++j) {
+                    if (&m_atoms[j] == bondedAtom) {
+                        bonds.emplace_back(i, j);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return bonds;
     }
 }

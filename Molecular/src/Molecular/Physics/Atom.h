@@ -45,11 +45,13 @@ namespace Molecular{
         glm::dvec2 GetPositionD() const { return m_position; }
         glm::dvec2 GetVelocityD() const { return m_velocity; }
 
-        void AddBond(Atom* other);
-
         void SetPosition(const glm::dvec2& position) { m_position = position; }
         void SetVelocity(const glm::dvec2& velocity) { m_velocity = velocity; }
         void SetCharge(double charge) { m_charge = charge; }
+
+        void TryFormBond(Atom *other);
+        void BreakBond(Atom *other);
+        void AddBond(Atom *other);
 
         double GetMassD() const { return m_mass; }
         double GetVanDerWaalsRadiusD() const { return m_vanDerWaalsRadius; }
@@ -64,14 +66,18 @@ namespace Molecular{
 
         bool CanFormBond() const { return m_bondedAtoms.size() < static_cast<size_t>(m_valence);}
         bool CanBondWith(const Atom* other) const;
+        bool CanFormBondWith(const Atom* other) const;
         bool IsBondedTo(const Atom* other) const;
+        bool IsWithinBondingRange(const Atom* other) const;
+        bool ShouldBreakBondWith(const Atom* other) const;
 
         glm::vec4 GetColor() const { return m_color; }
 
         std::string GetElement() const { return m_element;}
 
+        const std::vector<Atom*>& GetBonds() const { return m_bondedAtoms; }
         std::vector<Atom*>& GetBondedAtoms() { return m_bondedAtoms; }
-        
+
     private:
         glm::dvec2 m_position;
         glm::dvec2 m_velocity;
@@ -90,5 +96,6 @@ namespace Molecular{
 
         std::vector<Atom*> m_bondedAtoms;
         std::string m_element;
+
     };
 }
