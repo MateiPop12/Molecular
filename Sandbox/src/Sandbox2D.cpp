@@ -1,5 +1,6 @@
 #include "Sandbox2D.h"
 
+#include "Molecular.h"
 #include "../../Molecular/vendor/imgui/imgui.h"
 #include <random>
 
@@ -15,17 +16,6 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.82f, -0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(-0.3f, -0.3f)));
-    m_simulationSpace.AddObject(Molecular::Atom("N", glm::vec2(0.0f, 0.0f)));
-    m_simulationSpace.AddObject(Molecular::Atom("C", glm::vec2(0.3f, 0.33f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.8f, 0.7f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.8f, 0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.7f, -0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-1.23f, 0.0f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.0f, -1.2f)));
-
     UpdateAtomCounts();
 }
 
@@ -178,11 +168,22 @@ void Sandbox2D::OnImGuiRender()
     ImGui::Text("Total Energy: %.4f eV", totalEnergy);
 
     const auto& energyHistory = m_simulationSpace.GetEnergyHistory();
+    ImGui::Text("Data Points: %zu", energyHistory.size());
+
     if (!energyHistory.empty()) {
         ImGui::PlotLines("Energy Over Time", energyHistory.data(),
                          energyHistory.size(), 0, nullptr, 0.0f,
                          *std::max_element(energyHistory.begin(), energyHistory.end()),
                          ImVec2(0, 100));
+    }
+
+    ImGui::Spacing();
+    if (ImGui::Button("Export Energy Data", ImVec2(150, 30))) {
+        m_simulationSpace.ExportEnergyDataToCSV();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Clear History", ImVec2(120, 30))) {
+        m_simulationSpace.ClearEnergyHistory();
     }
 
     ImGui::Spacing();
@@ -331,15 +332,8 @@ void Sandbox2D::SetupDefaultSimulation()
 
     m_simulationSpace.ClearAllAtoms();
 
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.82f, -0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(-0.3f, -0.3f)));
-    m_simulationSpace.AddObject(Molecular::Atom("N", glm::vec2(0.0f, 0.0f)));
-    m_simulationSpace.AddObject(Molecular::Atom("C", glm::vec2(0.3f, 0.33f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.8f, 0.7f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.8f, 0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.7f, -0.8f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-1.23f, 0.0f)));
-    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.0f, -1.2f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.0f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.3f, 0.0f)));
 
 
     m_simulationSpace.SaveInitialState();

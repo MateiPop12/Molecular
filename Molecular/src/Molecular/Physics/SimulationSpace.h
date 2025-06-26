@@ -4,6 +4,11 @@
 #include "BoundingBox.h"
 #include "Molecular/Core/Timestep.h"
 
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <chrono>
+
 namespace Molecular{
 
     enum class IntegrationMethod {
@@ -33,7 +38,10 @@ namespace Molecular{
         void SaveInitialState();
 
         void UpdateBonds();
-        void RenderBonds() const;
+
+        void RecordEnergyData(double currentTime);
+        void ExportEnergyDataToCSV(const std::string& filename = "") const;
+        void ClearEnergyHistory() { m_energyHistory.clear(); m_timeHistory.clear(); }
 
         bool IsRunning() const { return m_isRunning; }
 
@@ -64,6 +72,7 @@ namespace Molecular{
         std::vector<Atom> m_atoms;
         std::vector<Atom> m_initialAtoms;
         std::vector<float> m_energyHistory;
+        std::vector<double> m_timeHistory;
 
         const size_t m_maxEnergyHistory = 1000000;
     };

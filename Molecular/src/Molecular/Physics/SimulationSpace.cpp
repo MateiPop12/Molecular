@@ -2,10 +2,12 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/norm.hpp>
+#include <Core/Log.h>
+#include "Molecular.h"
 
 
 //TODO::Refactor the Update and integration method so that the first atom loop is outside the integration method
-namespace Molecular{
+namespace Molecular {
 
     void SimulationSpace::AddObject(const Atom &atom) {
         m_atoms.push_back(atom);
@@ -15,12 +17,14 @@ namespace Molecular{
     }
 
     void SimulationSpace::Update(Molecular::Timestep m_timeStep, BoundingBox boundingBox) {
-
         if (!m_isRunning) {
             return;
         }
 
         double dt = m_timeStep.GetSeconds();
+        static double accumulatedTime = 0.0;  // Track total simulation time
+        accumulatedTime += dt;
+
         for (size_t i = 0; i < m_atoms.size(); ++i) {
             if (m_integrationMethod == IntegrationMethod::Euler) {
                 Euler(i, dt, boundingBox);
@@ -29,18 +33,20 @@ namespace Molecular{
             }
         }
 
-        float energy = CalculateTotalEnergy();
-        if (m_energyHistory.size() >= m_maxEnergyHistory) {
-            m_energyHistory.erase(m_energyHistory.begin()); // Remove oldest entry
+        // Record energy data every few timesteps to avoid excessive data
+        static int recordCounter = 0;
+        const int recordInterval = 5;
+
+        if (recordCounter++ % recordInterval == 0) {
+            RecordEnergyData(accumulatedTime);
         }
-        m_energyHistory.push_back(energy);
     }
 
     void SimulationSpace::ResetSimulation() {
-
         StopSimulation();
         ResetToInitialPositions();
         m_energyHistory.clear();
+        m_timeHistory.clear();  // Clear time history as well
         for (auto& atom : m_atoms) {
             atom.GetBondedAtoms().clear();
         }
@@ -320,5 +326,62 @@ namespace Molecular{
         }
 
         return bonds;
+    }
+
+    void SimulationSpace::RecordEnergyData(double currentTime) {
+        if (!m_isRunning) return;
+
+        double totalEnergy = CalculateTotalEnergy();
+
+        // Only record if we haven't exceeded max history size
+        if (m_energyHistory.size() < m_maxEnergyHistory) {
+            m_energyHistory.push_back(static_cast<float>(totalEnergy));
+            m_timeHistory.push_back(currentTime);
+        } else {
+            // Implement circular buffer behavior - remove oldest entries
+            m_energyHistory.erase(m_energyHistory.begin());
+            m_timeHistory.erase(m_timeHistory.begin());
+
+            m_energyHistory.push_back(static_cast<float>(totalEnergy));
+            m_timeHistory.push_back(currentTime);
+        }
+    }
+
+    void SimulationSpace::ExportEnergyDataToCSV(const std::string &filename) const {
+        std::string outputFilename = filename;
+
+        MOL_CORE_INFO("STARTED EXPORTING");
+
+        // Generate default filename if none provided
+        if (outputFilename.empty()) {
+            auto now = std::chrono::system_clock::now();
+            auto time_t = std::chrono::system_clock::to_time_t(now);
+
+            std::stringstream ss;
+
+            ss << "energy_data_" << std::put_time(std::localtime(&time_t), "%d-%m-%Y_%H-%M-%S") << ".csv";
+
+            outputFilename = ss.str();
+        }
+
+        std::ofstream file(outputFilename);
+        if (!file.is_open()) {
+            MOL_CORE_ERROR("FILE COULD NOT BE OPENED");
+            return;
+        }
+
+        // Write CSV header
+        file << "Time,Total_Energy\n";
+
+        // Write energy data
+        for (size_t i = 0; i < m_energyHistory.size() && i < m_timeHistory.size(); ++i) {
+            file << std::fixed << std::setprecision(6)
+                 << m_timeHistory[i] << ","
+                 << m_energyHistory[i] << "\n";
+        }
+
+        MOL_CORE_INFO("FINISHED EXPORTING");
+
+        file.close();
     }
 }
