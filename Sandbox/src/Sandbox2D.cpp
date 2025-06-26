@@ -159,6 +159,39 @@ void Sandbox2D::OnImGuiRender()
         m_simulationSpace.SetEnergyLossFactor(static_cast<double>(energyLossF));
     }
 
+    ImGui::SeparatorText("Simulation Boundaries");
+
+    if (isRunning) {
+        // Show current value but disable modification when simulation is running
+        ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.0f, 1.0f), "Stop simulation to modify boundaries");
+        ImGui::BeginDisabled();
+    }
+
+    float boundingBoxSize = m_boundingBoxSize;
+    // Custom slider with 0.2 increments between 0.4 and 10.0
+    if (ImGui::SliderFloat("Bounding Box Size", &boundingBoxSize, 0.4f, 10.0f, "%.1f")) {
+        // Round to nearest 0.2 increment
+        boundingBoxSize = std::round(boundingBoxSize / 0.2f) * 0.2f;
+        // Clamp to ensure we stay within bounds after rounding
+        boundingBoxSize = std::clamp(boundingBoxSize, 0.4f, 5.0f);
+
+        m_boundingBoxSize = boundingBoxSize;
+
+        // Update the position distribution range when bounding box changes
+        m_positionDistribution = std::uniform_real_distribution<float>(
+            -m_boundingBoxSize + 0.2f,
+            m_boundingBoxSize - 0.2f
+        );
+    }
+
+    if (isRunning) {
+        ImGui::EndDisabled();
+    }
+
+    ImGui::Text("Current bounds: [%.1f, %.1f] x [%.1f, %.1f]",
+        -m_boundingBoxSize, m_boundingBoxSize,
+        -m_boundingBoxSize, m_boundingBoxSize);
+
     ImGui::Spacing();
 
     // === ENERGY MONITORING SECTION ===
