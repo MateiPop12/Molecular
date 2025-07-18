@@ -96,9 +96,21 @@ void Sandbox2D::OnImGuiRender()
         m_simulationSpace.ClearAllAtoms();
         UpdateAtomCounts();
     }
-    ImGui::SameLine();
+    ImGui::Spacing();
     if (ImGui::Button("Default Setup", ImVec2(120, 30))) {
         SetupDefaultSimulation();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("H2O Setup", ImVec2(120, 30))) {
+        SetupH2OSimulation();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("O3 Setup", ImVec2(120, 30))) {
+        SetupO3Simulation();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("CH4 Setup", ImVec2(120, 30))) {
+        SetupCH4Simulation();
     }
 
     ImGui::Spacing();
@@ -367,6 +379,62 @@ void Sandbox2D::SetupDefaultSimulation()
 
     m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.0f, 0.0f)));
     m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.3f, 0.0f)));
+
+
+    m_simulationSpace.SaveInitialState();
+
+    UpdateAtomCounts();
+}
+
+void Sandbox2D::SetupH2OSimulation()
+{
+    if (m_simulationSpace.IsRunning()) {
+        m_simulationSpace.StopSimulation();
+    }
+
+    m_simulationSpace.ClearAllAtoms();
+
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.3f, 0.1f)));
+    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(0.0f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.3f, 0.0f)));
+
+
+    m_simulationSpace.SaveInitialState();
+
+    UpdateAtomCounts();
+}
+
+void Sandbox2D::SetupO3Simulation()
+{
+    if (m_simulationSpace.IsRunning()) {
+        m_simulationSpace.StopSimulation();
+    }
+
+    m_simulationSpace.ClearAllAtoms();
+
+    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(-0.3f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(0.0f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("O", glm::vec2(0.3f, 0.0f)));
+
+
+    m_simulationSpace.SaveInitialState();
+
+    UpdateAtomCounts();
+}
+
+void Sandbox2D::SetupCH4Simulation()
+{
+    if (m_simulationSpace.IsRunning()) {
+        m_simulationSpace.StopSimulation();
+    }
+
+    m_simulationSpace.ClearAllAtoms();
+
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.2f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.0f, 0.2f)));
+    m_simulationSpace.AddObject(Molecular::Atom("C", glm::vec2(0.0f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(-0.2f, 0.0f)));
+    m_simulationSpace.AddObject(Molecular::Atom("H", glm::vec2(0.f, -0.2f)));
 
 
     m_simulationSpace.SaveInitialState();

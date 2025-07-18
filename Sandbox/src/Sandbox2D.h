@@ -27,6 +27,9 @@ private:
 
     void ResetSimulation();
     void SetupDefaultSimulation();
+    void SetupH2OSimulation();
+    void SetupO3Simulation();
+    void SetupCH4Simulation();
 
     glm::vec2 GenerateRandomPosition();
     bool IsPositionValid(const glm::vec2& position, float radius);

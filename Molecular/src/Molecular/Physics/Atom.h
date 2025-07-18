@@ -6,6 +6,29 @@
 namespace Molecular{
     class Atom{
     public:
+
+        enum class MolecularGeometry {
+            Linear,        // 2 bonds: 180°
+            Trigonal,      // 3 bonds: 120°
+            Tetrahedral,   // 4 bonds: 109.5°
+            TrigonalBipyramidal, // 5 bonds: 90°, 120°
+            Octahedral     // 6 bonds: 90°
+        };
+
+        enum class ElectronPairType {
+            BondingPair,
+            LonePair
+        };
+
+        struct ElectronPair {
+            ElectronPairType type;
+            glm::dvec2 direction;  // Unit vector indicating the direction of the electron pair
+            Atom* bondedAtom;      // nullptr for lone pairs
+
+            ElectronPair(ElectronPairType t, glm::dvec2 dir, Atom* atom = nullptr)
+                : type(t), direction(glm::normalize(dir)), bondedAtom(atom) {}
+        };
+
         Atom(glm::dvec2 position, glm::dvec2 velocity, double mass,
              double vanDerWaalsRadius, double bondLength, double epsilon, double sigma, double electronegativity, int valence, glm::vec4 color)
                 : m_position(position), m_velocity(velocity), m_mass(mass),
@@ -45,6 +68,10 @@ namespace Molecular{
         glm::dvec2 GetPositionD() const { return m_position; }
         glm::dvec2 GetVelocityD() const { return m_velocity; }
 
+        glm::dvec2 CalculateAngularForce(const Atom* centerAtom, const Atom* otherBonded) const;
+        glm::dvec2 CalculateLonePairForce(const ElectronPair& lonePair, const std::vector<ElectronPair>& allPairs) const;
+        glm::dvec2 CalculateAllLonePairForces() const;
+
         void SetPosition(const glm::dvec2& position) { m_position = position; }
         void SetVelocity(const glm::dvec2& velocity) { m_velocity = velocity; }
         void SetCharge(double charge) { m_charge = charge; }
@@ -60,9 +87,13 @@ namespace Molecular{
         double GetSigmaD() const { return m_sigma; }
         double GetElectronegativity() const { return m_electronegativity; }
         double GetCharge() const { return m_charge; }
+        double GetIdealBondAngle() const;
+        double GetIdealAngleBetweenPairs(const ElectronPair& pair1, const ElectronPair& pair2) const;
 
         int GetValence() const { return m_valence; }
         int GetBondCount() const { return m_bond_count; }
+        int GetLonePairCount() const;
+        int GetTotalElectronPairs() const { return GetBondCount() + GetLonePairCount(); }
 
         bool CanFormBond() const { return m_bondedAtoms.size() < static_cast<size_t>(m_valence);}
         bool CanBondWith(const Atom* other) const;
@@ -77,7 +108,12 @@ namespace Molecular{
 
         const std::vector<Atom*>& GetBonds() const { return m_bondedAtoms; }
         std::vector<Atom*>& GetBondedAtoms() { return m_bondedAtoms; }
+        std::vector<glm::dvec2> GetOptimalBondDirections() const;
+        std::vector<ElectronPair> GetAllElectronPairs() const {return m_electronPairs;};
+        std::vector<ElectronPair> GetLonePairs() const;
 
+        MolecularGeometry GetMolecularGeometry() const;
+        void UpdateElectronPairGeometry();
     private:
         glm::dvec2 m_position;
         glm::dvec2 m_velocity;
@@ -95,6 +131,8 @@ namespace Molecular{
         unsigned int m_bond_count;      // Current number of bonds
 
         std::vector<Atom*> m_bondedAtoms;
+        std::vector<ElectronPair> m_electronPairs;  // All electron pairs (bonding + lone pairs)
+
         std::string m_element;
 
     };
