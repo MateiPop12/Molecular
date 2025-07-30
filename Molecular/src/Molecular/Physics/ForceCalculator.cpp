@@ -56,51 +56,6 @@ namespace Molecular
         return glm::normalize(r) * forceMagnitude;
     }
 
-    glm::dvec2 ForceCalculator::CalculateAngularForces(const Atom& atom, size_t atomIndex) const
-    {
-        glm::dvec2 totalAngularForce(0.0);
-
-        const_cast<Atom&>(atom).UpdateElectronPairGeometry();
-
-        const auto& bondedAtoms = atom.GetBonds();
-
-        // For each bonded atom, this atom acts as the center for angle calculation
-        for (size_t i = 0; i < bondedAtoms.size(); ++i) {
-            for (size_t j = i + 1; j < bondedAtoms.size(); ++j) {
-                // Calculate angular force between bonds i and j with this atom as a center
-                const Atom* atom1 = bondedAtoms[i];
-                const Atom* atom2 = bondedAtoms[j];
-
-                // Force on atom1 due to an angle with atom2
-                glm::dvec2 force1 = atom1->CalculateAngularForce(&atom, atom2);
-                // Force on atom2 due to an angle with atom1
-                glm::dvec2 force2 = atom2->CalculateAngularForce(&atom, atom1);
-
-                // Apply Newton's third law - equal and opposite reaction on center atom
-                totalAngularForce -= (force1 + force2);
-            }
-        }
-
-        // This atom can also be affected by angles where it's not the center
-        for (const Atom* bondedAtom : bondedAtoms) {
-            const auto& neighborBonds = bondedAtom->GetBonds();
-
-            for (const Atom* neighbor : neighborBonds) {
-                if (neighbor != &atom) {
-                    // Calculate force on this atom due to an angle at bondedAtom
-                    const glm::dvec2 angularForce = atom.CalculateAngularForce(bondedAtom, neighbor);
-                    totalAngularForce += angularForce;
-                }
-            }
-        }
-
-        // Add lone pair forces
-        const glm::dvec2 lonePairForce = atom.CalculateAllLonePairForces();
-        totalAngularForce += lonePairForce;
-
-        return ClampForce(totalAngularForce);
-    }
-
     glm::dvec2 ForceCalculator::CalculateTotalForce(const Atom& atom, const std::vector<Atom>& allAtoms, const size_t atomIndex) const
     {
         glm::dvec2 totalForce(0.0);
@@ -112,9 +67,6 @@ namespace Molecular
                 totalForce += CalculateCoulombForce(atom, allAtoms[j]);
             }
         }
-
-        // Add angular forces
-        totalForce += CalculateAngularForces(atom, atomIndex);
 
         return ClampForce(totalForce);
     }

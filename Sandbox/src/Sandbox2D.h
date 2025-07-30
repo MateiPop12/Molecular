@@ -3,11 +3,11 @@
 #include <random>
 #include "Molecular.h"
 
-class Sandbox2D : public Molecular::Layer
+class Sandbox2D final : public Molecular::Layer
 {
 public:
     Sandbox2D();
-    virtual ~Sandbox2D() = default;
+    ~Sandbox2D() = default;
 
     void OnAttach() override;
     void OnDetach() override;
@@ -32,7 +32,7 @@ private:
     void SetupCH4Simulation();
 
     glm::vec2 GenerateRandomPosition();
-    bool IsPositionValid(const glm::vec2& position, float radius);
+    bool IsPositionValid(const glm::vec2& position, float radius) const;
     void UpdateAtomCounts();
     int GetAtomCount(const std::string& elementType) const;
 

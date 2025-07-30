@@ -3,6 +3,7 @@
 
 #include "Molecular.h"
 #include "Sandbox2D.h"
+#include "Sandbox3D.h"
 #include "../../Molecular/vendor/imgui/imgui.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -242,11 +243,11 @@ public:
 	Sandbox() 
 	{
 		//PushLayer(new ExampleLayer());
-		PushLayer(new Sandbox2D());
+		//PushLayer(new Sandbox2D());
+		PushLayer(new Sandbox3D());
 	}
-	~Sandbox() 
-	{
-	}
+	~Sandbox() override
+	= default;
 };
 
 Molecular::App* Molecular::CreateApplication()

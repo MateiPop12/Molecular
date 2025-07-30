@@ -24,10 +24,18 @@ namespace Molecular
 		m_window->SetEventCallback(MOL_BIND_EVENT_FN(App::OnEvent));
 		m_window->SetVSync(false);
 
+		// DEBUG: Log initial window size
+		MOL_CORE_INFO("Initial window size: {}x{}", m_window->GetWidth(), m_window->GetHeight());
+
 		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+
+		// DEBUG: Force initial resize event after all layers are attached
+		WindowResizeEvent initialResize(m_window->GetWidth(), m_window->GetHeight());
+		MOL_CORE_INFO("Dispatching initial resize event: {}x{}", m_window->GetWidth(), m_window->GetHeight());
+		OnEvent(initialResize);
 	}
 	App::~App()
 	{

@@ -5,7 +5,6 @@
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "VertexArray.h"
-#include "Core/Core.h"
 
 namespace Molecular
 {
@@ -102,6 +101,7 @@ namespace Molecular
 
     void Renderer2D::Shutdown()
     {
+        delete rendererStorage;
     }
 
     void Renderer2D::BeginScene(const OrthographicCamera& camera)

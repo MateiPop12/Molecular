@@ -16,6 +16,7 @@
 #include "Molecular/Renderer/Buffer.h"
 #include "Molecular/Renderer/Renderer.h"
 #include "Molecular/Renderer/Renderer2D.h"
+#include "Molecular/Renderer/Renderer3D.h"
 #include "Molecular/Renderer/VertexArray.h"
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/OrthographicCamera.h"

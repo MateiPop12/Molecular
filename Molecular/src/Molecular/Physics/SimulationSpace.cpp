@@ -24,7 +24,7 @@ namespace Molecular {
         }
     }
 
-    void SimulationSpace::Update(Molecular::Timestep timeStep, const BoundingBox& boundingBox) {
+    void SimulationSpace::Update(Timestep timeStep, const BoundingBox& boundingBox) {
         if (!m_isRunning) {
             return;
         }

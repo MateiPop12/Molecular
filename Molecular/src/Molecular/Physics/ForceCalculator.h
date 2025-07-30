@@ -11,7 +11,6 @@ namespace Molecular
 
         [[nodiscard]] glm::dvec2 CalculateVanDerWaalsForce(const Atom& a, const Atom& b) const;
         [[nodiscard]] glm::dvec2 CalculateCoulombForce(const Atom& a, const Atom& b) const;
-        [[nodiscard]] glm::dvec2 CalculateAngularForces(const Atom& atom, size_t atomIndex) const;
         [[nodiscard]] glm::dvec2 CalculateTotalForce(const Atom& atom, const std::vector<Atom>& allAtoms, size_t atomIndex) const;
 
         static double CalculateTotalEnergy(const std::vector<Atom>& atoms);

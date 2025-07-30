@@ -13,8 +13,8 @@ namespace Molecular {
         uint32_t Height;
 
         WindowProps(const std::string& title = "Molecular Simulation",
-                    uint32_t width = 1800,
-                    uint32_t height = 1000)
+                    uint32_t width = 1920,
+                    uint32_t height = 1080)
             : Title(title), Width(width), Height(height)
         {
         }

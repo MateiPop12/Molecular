@@ -1,13 +1,12 @@
 #include "Sandbox2D.h"
 
-#include "Molecular.h"
 #include "../../Molecular/vendor/imgui/imgui.h"
 #include <random>
 
 Sandbox2D::Sandbox2D()
-    : Layer("Sandbox2D"), m_cameraController(1920.0f/1080.0f, true),
-      m_rng(std::random_device{}()),
-      m_positionDistribution(-m_boundingBoxSize + 0.2f, m_boundingBoxSize - 0.2f)
+    : Layer("Sandbox2D"), m_rng(std::random_device{}()),
+      m_positionDistribution(-m_boundingBoxSize + 0.2f, m_boundingBoxSize - 0.2f),
+      m_cameraController(1920.0f/1080.0f, true)
 {
     for (const auto& element : m_availableElements) {
         m_atomCounts[element] = 0;
@@ -54,8 +53,6 @@ void Sandbox2D::OnUpdate(Molecular::Timestep ts)
         sum += atom.GetVanDerWaalsRadius();
         numberOfAtoms++;
     }
-
-    averageRadius = sum/numberOfAtoms;
 
     Molecular::Renderer2D::EndScene();
 
@@ -136,7 +133,7 @@ void Sandbox2D::OnImGuiRender()
             }
             ImGui::SameLine();
 
-            // Remove button (only enabled if there are atoms of this type)
+            // Remove the button (only enabled if there are atoms of this type)
             if (GetAtomCount(element) > 0) {
                 if (ImGui::Button("-")) {
                     RemoveLastAtom(element);
@@ -157,15 +154,25 @@ void Sandbox2D::OnImGuiRender()
     ImGui::SeparatorText("Simulation Parameters");
 
     ImGui::Text("Integration Method");
-    if (ImGui::RadioButton("Euler", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::Euler)) {
-        m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::Euler);
-    }
-    if (ImGui::RadioButton("Runge-Kutta 4", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::RungeKutta4)) {
-        m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::RungeKutta4);
-    }
+
+if (ImGui::RadioButton("Euler", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::Euler)) {
+    m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::Euler);
+}
+
+if (ImGui::RadioButton("Runge-Kutta 4", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::RungeKutta4)) {
+    m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::RungeKutta4);
+}
+
+if (ImGui::RadioButton("Leap Frog", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::LeapFrog)) {
+    m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::LeapFrog);
+}
+
+if (ImGui::RadioButton("Velocity Verlet", m_simulationSpace.GetIntegrationMethod() == Molecular::IntegrationMethod::VelocityVerlet)) {
+    m_simulationSpace.SetIntegrationMethod(Molecular::IntegrationMethod::VelocityVerlet);
+}
 
     double energyLoss = m_simulationSpace.GetEnergyLossFactor();
-    float energyLossF = static_cast<float>(energyLoss);
+    auto energyLossF = static_cast<float>(energyLoss);
 
     if (ImGui::SliderFloat("Energy Loss Factor", &energyLossF, 0.0f, 0.99f, "%.2f")) {
         m_simulationSpace.SetEnergyLossFactor(static_cast<double>(energyLossF));
@@ -174,7 +181,7 @@ void Sandbox2D::OnImGuiRender()
     ImGui::SeparatorText("Simulation Boundaries");
 
     if (isRunning) {
-        // Show current value but disable modification when simulation is running
+        // Show the current value but disable modification when simulation is running
         ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.0f, 1.0f), "Stop simulation to modify boundaries");
         ImGui::BeginDisabled();
     }
@@ -182,7 +189,7 @@ void Sandbox2D::OnImGuiRender()
     float boundingBoxSize = m_boundingBoxSize;
     // Custom slider with 0.2 increments between 0.4 and 10.0
     if (ImGui::SliderFloat("Bounding Box Size", &boundingBoxSize, 0.4f, 10.0f, "%.1f")) {
-        // Round to nearest 0.2 increment
+        // Round to the nearest 0.2 increment
         boundingBoxSize = std::round(boundingBoxSize / 0.2f) * 0.2f;
         // Clamp to ensure we stay within bounds after rounding
         boundingBoxSize = std::clamp(boundingBoxSize, 0.4f, 5.0f);
@@ -209,7 +216,7 @@ void Sandbox2D::OnImGuiRender()
     // === ENERGY MONITORING SECTION ===
     ImGui::SeparatorText("Energy Monitoring");
 
-    float totalEnergy = m_simulationSpace.CalculateTotalEnergy();
+    const float totalEnergy = m_simulationSpace.CalculateTotalEnergy();
     ImGui::Text("Total Energy: %.4f eV", totalEnergy);
 
     const auto& energyHistory = m_simulationSpace.GetEnergyHistory();
@@ -243,8 +250,8 @@ void Sandbox2D::OnImGuiRender()
     const auto& atoms = m_simulationSpace.GetObjects();
     for (size_t i = 0; i < atoms.size(); ++i) {
         const auto& atom = atoms[i];
-        int bondCount = atom.GetBonds().size();
-        int maxBonds = atom.GetValence();
+        const int bondCount = atom.GetBonds().size();
+        const int maxBonds = atom.GetValence();
 
         ImGui::Text("Atom %zu (%s): %d/%d bonds", i, atom.GetElement().c_str(), bondCount, maxBonds);
 
@@ -335,15 +342,14 @@ glm::vec2 Sandbox2D::GenerateRandomPosition()
     return glm::vec2(x, y);
 }
 
-bool Sandbox2D::IsPositionValid(const glm::vec2& position, float radius)
+bool Sandbox2D::IsPositionValid(const glm::vec2& position, const float radius) const
 {
     const auto& atoms = m_simulationSpace.GetObjects();
 
     for (const auto& atom : atoms) {
-        float distance = glm::length(position - atom.GetPosition());
-        float minDistance = radius + atom.GetVanDerWaalsRadius();
+        const float distance = glm::length(position - atom.GetPosition());
 
-        if (distance < minDistance) {
+        if (const float minDistance = radius + atom.GetVanDerWaalsRadius(); distance < minDistance) {
             return false;
         }
     }

@@ -1,7 +1,10 @@
 project(Molecular)
 
 #Define a shared library
-add_library(Molecular STATIC)
+add_library(Molecular STATIC
+        src/Molecular/Renderer/Renderer3D.cpp
+        src/Molecular/Renderer/Renderer3D.h
+)
 
 # Add source files
 file(GLOB_RECURSE MOLECULAR_SRC CONFIGURE_DEPENDS
