@@ -4,6 +4,13 @@ project(Molecular)
 add_library(Molecular STATIC
         src/Molecular/Renderer/Renderer3D.cpp
         src/Molecular/Renderer/Renderer3D.h
+        src/Molecular/Renderer/Framebuffer.cpp
+        src/Molecular/Renderer/Framebuffer.h
+        src/Platform/OpenGL/OpenGLFramebuffer.cpp
+        src/Platform/OpenGL/OpenGLFramebuffer.h
+        src/Molecular/Renderer/Camera.h
+        src/Molecular/Renderer/EditorCamera.h
+        src/Molecular/Renderer/EditorCamera.cpp
 )
 
 # Add source files

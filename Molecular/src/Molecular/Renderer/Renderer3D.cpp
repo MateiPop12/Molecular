@@ -2,6 +2,7 @@
 
 #include <ext/matrix_transform.hpp>
 
+#include "EditorCamera.h"
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "VertexArray.h"
@@ -92,10 +93,12 @@ namespace Molecular
         delete renderer3DStorage;
     }
 
-    void Renderer3D::BeginScene(const OrthographicCamera& camera)
+    void Renderer3D::BeginScene(const EditorCamera& camera)
     {
+        glm::mat4 viewProjection = camera.GetViewProjection();
+
         renderer3DStorage->sphereShader->Bind();
-        renderer3DStorage->sphereShader->SetMat4("u_ViewProjection", camera.getViewProjectionMatrix());
+        renderer3DStorage->sphereShader->SetMat4("u_ViewProjection", viewProjection);
     }
 
     void Renderer3D::EndScene()

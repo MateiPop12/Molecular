@@ -1,4 +1,5 @@
 #pragma once
+#include "EditorCamera.h"
 #include "OrthographicCamera.h"
 
 namespace Molecular
@@ -9,7 +10,7 @@ namespace Molecular
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(const OrthographicCamera& camera);
+        static void BeginScene(const EditorCamera& camera);
         static void EndScene();
 
         static void DrawSphere(const glm::vec3& position, float radius, const glm::vec4& color);

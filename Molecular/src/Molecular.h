@@ -20,9 +20,11 @@
 #include "Molecular/Renderer/VertexArray.h"
 #include "Molecular/Renderer/Shader.h"
 #include "Molecular/Renderer/OrthographicCamera.h"
+#include "Molecular/Renderer/EditorCamera.h"
 #include "Molecular/Renderer/RenderCommand.h"
 #include "Molecular/Renderer/Texture.h"
 #include "Molecular/Renderer/OrthographicCameraController.h"
+#include "Molecular/Renderer/FrameBuffer.h"
 
 //Physics
 #include "Molecular/Physics/SimulationSpace.h"
