@@ -29,3 +29,4 @@
 //Physics
 #include "Molecular/Physics/SimulationSpace.h"
 #include "Molecular/Physics/Atom.h"
+#include "Molecular/Physics3D/SubatomicParticle.h"

@@ -26,9 +26,9 @@ void Sandbox3D::OnUpdate(const Molecular::Timestep ts)
 
     Molecular::Renderer3D::BeginScene(m_CameraController);
 
-    DrawSpace(1,50.0f);
+    DrawSpace(0,10.0f);
 
-    Molecular::Renderer3D::DrawSphere({0.0f, 0.0f, 0.0f}, 0.5f, {0.8f, 0.2f, 0.2f, 1.0f});
+    Molecular::Renderer3D::DrawSphere({0.0f, 0.0f, 0.0f},  0.1f, {0.8f, 0.2f, 0.2f, 1.0f});
     Molecular::Renderer3D::DrawSphere({1.0f, 1.0f, 1.0f}, 0.5f, {0.2f, 0.2f, 0.8f, 1.0f});
 
     Molecular::Renderer::EndScene();
