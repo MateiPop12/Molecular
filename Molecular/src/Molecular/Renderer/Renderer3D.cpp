@@ -160,8 +160,8 @@ namespace Molecular
         renderer3DStorage->boxVertexArray->SetIndexBuffer(boxIB);
 
         // ---------------- SHADER SETUP ----------------
-        renderer3DStorage->sphereShader = Shader::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Sphere.glsl");
-        renderer3DStorage->boxShader = Shader::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Box.glsl");
+        renderer3DStorage->sphereShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Sphere.glsl");
+        renderer3DStorage->boxShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Box.glsl");
     }
 
     void Renderer3D::Shutdown()

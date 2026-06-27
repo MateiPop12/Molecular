@@ -17,3 +17,7 @@ cmake-*/
 
 # IDE specific folders
 .idea/
+
+#CLAUDE
+CLAUDE.md
+.claude

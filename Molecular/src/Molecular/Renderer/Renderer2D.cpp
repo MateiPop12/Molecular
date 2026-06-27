@@ -94,7 +94,7 @@ namespace Molecular
         uint32_t whiteTextureData = 0xffffffff;
         rendererStorage->whiteTexture->SetData(&whiteTextureData, sizeof(whiteTextureData));
 
-        rendererStorage->quadShader = Shader::Create("D:/FACULTATE/Licenta/Molecular/Sandbox/assets/shaders/Texture.glsl");
+        rendererStorage->quadShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Texture.glsl");
         rendererStorage->quadShader->Bind();
         rendererStorage->quadShader->SetInt("u_Texture", 0);
     }
