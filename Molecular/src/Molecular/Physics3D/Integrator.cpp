@@ -2,84 +2,78 @@
 
 namespace Molecular
 {
-    Integrator::Integrator()
-        : m_firstStep(true)
+    // -----------------------------------------------------------------------
+    // CalculateAcceleration
+    // Sums the total pairwise force on 'obj' from every other object in
+    // 'others' (skipping self), then returns F/m (m/s²).
+    // -----------------------------------------------------------------------
+    glm::dvec3 Integrator::CalculateAcceleration(const PhysicsObject&               obj,
+                                                  const std::vector<PhysicsObject*>& others,
+                                                  const ForceCalculator3D&             forceCalc)
     {
+        glm::dvec3 totalForce(0.0);
+
+        for (const PhysicsObject* other : others)
+        {
+            if (other == &obj)
+                continue;
+
+            totalForce += forceCalc.CalculateTotalForce(obj, *other);
+        }
+
+        return totalForce / obj.GetMass(); // a = F / m  (m/s²)
     }
 
-    void Integrator::VelocityVerlet(std::vector<PhysicsObject*>& objects, double deltaTime, ForceCalculator forceFunc)
+    // -----------------------------------------------------------------------
+    // VelocityVerlet
+    //
+    // Standard two-stage Velocity-Verlet:
+    //
+    //   1. Compute a(t)  from current positions.
+    //   2. Update positions:  x(t+dt) = x(t) + v(t)*dt + ½*a(t)*dt²
+    //   3. Compute a(t+dt) from new positions.
+    //   4. Update velocities: v(t+dt) = v(t) + ½*(a(t) + a(t+dt))*dt
+    //
+    // This is time-reversible and second-order accurate with no special
+    // first-step handling required.
+    // -----------------------------------------------------------------------
+    void Integrator::VelocityVerlet(std::vector<PhysicsObject*>& objects,
+                                    double deltaTime,
+                                    const ForceCalculator3D& forceCalc)
     {
-        const size_t numObjects = objects.size();
+        const size_t n = objects.size();
 
-        // Resize acceleration storage if needed
-        if (m_previousAccelerations.size() != numObjects)
+        // --- Stage 1: accelerations at current positions ---
+        std::vector<glm::dvec3> acc(n);
+        for (size_t i = 0; i < n; ++i)
+            acc[i] = CalculateAcceleration(*objects[i], objects, forceCalc);
+
+        // --- Stage 2: update positions ---
+        for (size_t i = 0; i < n; ++i)
         {
-            m_previousAccelerations.resize(numObjects);
-            m_firstStep = true;
+            const glm::dvec3 newPos = objects[i]->GetPositionD()
+                                    + objects[i]->GetVelocityD() * deltaTime
+                                    + 0.5 * acc[i] * (deltaTime * deltaTime);
+            objects[i]->SetPosition(newPos);
         }
 
-        // Calculate current accelerations
-        std::vector<glm::dvec3> currentAccelerations(numObjects);
-        for (size_t i = 0; i < numObjects; ++i)
+        // --- Stage 3: accelerations at new positions ---
+        std::vector<glm::dvec3> accNew(n);
+        for (size_t i = 0; i < n; ++i)
+            accNew[i] = CalculateAcceleration(*objects[i], objects, forceCalc);
+
+        // --- Stage 4: update velocities with averaged acceleration ---
+        for (size_t i = 0; i < n; ++i)
         {
-            currentAccelerations[i] = CalculateAcceleration(*objects[i], objects, forceFunc);
-        }
-
-        // For the first step, we need to handle it specially since we don't have previous accelerations
-        if (m_firstStep)
-        {
-            // Simple Euler step for the first iteration
-            for (size_t i = 0; i < numObjects; ++i)
-            {
-                PhysicsObject* obj = objects[i];
-
-                // Update position: x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
-                glm::dvec3 newPosition = obj->GetPositionD() + obj->GetVelocityD() * deltaTime + 0.5 * currentAccelerations[i] * deltaTime * deltaTime;
-
-                // Update velocity: v(t+dt) = v(t) + a(t)*dt
-                glm::dvec3 newVelocity = obj->GetVelocityD() + currentAccelerations[i] * deltaTime;
-
-                obj->SetPosition(newPosition);
-                obj->SetVelocity(newVelocity);
-
-                m_previousAccelerations[i] = currentAccelerations[i];
-            }
-            m_firstStep = false;
-            return;
-        }
-
-        // Velocity-Verlet integration for the following steps
-        for (size_t i = 0; i < numObjects; ++i)
-        {
-            PhysicsObject* obj = objects[i];
-
-            // Update position: x(t+dt) = x(t) + v(t)*dt + 0.5*a(t)*dt^2
-            glm::dvec3 newPosition = obj->GetPositionD() + obj->GetVelocityD() * deltaTime + 0.5 * currentAccelerations[i] * deltaTime * deltaTime;
-            obj->SetPosition(newPosition);
-        }
-
-        // Calculate new accelerations at new positions
-        std::vector<glm::dvec3> newAccelerations(numObjects);
-        for (size_t i = 0; i < numObjects; ++i)
-        {
-            newAccelerations[i] = CalculateAcceleration(*objects[i], objects, forceFunc);
-        }
-
-        // Update velocities: v(t+dt) = v(t) + 0.5*(a(t) + a(t+dt))*dt
-        for (size_t i = 0; i < numObjects; ++i)
-        {
-            PhysicsObject* obj = objects[i];
-            glm::dvec3 newVelocity = obj->GetVelocityD() + 0.5 * (currentAccelerations[i] + newAccelerations[i]) * deltaTime;
-            obj->SetVelocity(newVelocity);
-
-            // Store current accelerations for the next step
-            m_previousAccelerations[i] = newAccelerations[i];
+            const glm::dvec3 newVel = objects[i]->GetVelocityD()
+                                    + 0.5 * (acc[i] + accNew[i]) * deltaTime;
+            objects[i]->SetVelocity(newVel);
         }
     }
 
     void Integrator::Reset()
     {
-        m_previousAccelerations.clear();
-        m_firstStep = true;
+        // Nothing to reset in the stateless formulation.
+        // Kept for API compatibility.
     }
 }

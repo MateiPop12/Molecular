@@ -12,6 +12,7 @@ namespace Molecular
         [[nodiscard]] glm::dvec3 GetPositionD() const {return m_position;}
         [[nodiscard]] glm::dvec3 GetVelocityD() const {return m_velocity;}
         [[nodiscard]] double GetMass() const {return m_mass;}
+        [[nodiscard]] double     GetCharge()     const { return m_typeData->charge_C; }
 
         void SetPosition(const glm::dvec3& position) {m_position = position;}
         void SetVelocity(const glm::dvec3& velocity) {m_velocity = velocity;}

@@ -1,5 +1,4 @@
 #include "Sandbox3D.h"
-#include "../../Molecular/vendor/imgui/imgui.h"
 
 Sandbox3D::Sandbox3D()
 : Layer("SandBox3D"), m_CameraController(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f),

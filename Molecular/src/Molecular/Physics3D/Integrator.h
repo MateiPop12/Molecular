@@ -1,20 +1,30 @@
 #pragma once
 
 #include "PhysicsObject.h"
-#include "ForceCalculator.h"
+#include "ForceCalculator3D.h"
 
 namespace Molecular
 {
     class Integrator
     {
     public:
-        Integrator();
+        Integrator() = default;
         virtual ~Integrator() = default;
 
-        void VelocityVerlet(std::vector<PhysicsObject*>& objects, double deltaTime,ForceCalculator forceFunc);
+        // Advance all objects by one time-step using Velocity-Verlet integration.
+        // deltaTime is in seconds; positions are in femtometres.
+        void VelocityVerlet(std::vector<PhysicsObject*>& objects,
+                            double deltaTime,
+                            const ForceCalculator3D& forceCalc);
+
         void Reset();
+
     private:
-        std::vector<glm::dvec3> m_previousAccelerations;
-        bool m_firstStep;
+        // Sum all pairwise forces on 'obj' from every other object, then
+        // divide by mass to get acceleration (m/s²).
+        [[nodiscard]] static glm::dvec3 CalculateAcceleration(
+            const PhysicsObject&              obj,
+            const std::vector<PhysicsObject*>& others,
+            const ForceCalculator3D&             forceCalc);
     };
 }
