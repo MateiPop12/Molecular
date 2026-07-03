@@ -1,0 +1,77 @@
+site_name: Molecular — Knowledge Base
+site_description: Engine docs + learning knowledge base for the Molecular thesis project
+repo_url: https://github.com/MateiPop12/Molecular
+repo_name: MateiPop12/Molecular
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: README.md
+  - Project docs:
+      - Architecture: 01-architecture.md
+      - Engine: 02-engine.md
+      - Physics 2D: 03-physics-2d.md
+      - Physics 3D: 04-physics-3d.md
+      - Building & running: 05-building-and-running.md
+      - Status & roadmap: 06-status-and-roadmap.md
+  - Learning:
+      - How this works: learning/index.md
+      - Physics:
+          - Lennard-Jones potential: learning/physics/lennard-jones.md
+      - Exercises:
+          - "001 — doctest test target": learning/exercises/001-doctest-target.md
+          - "002 — asset path helper": learning/exercises/002-asset-path-helper.md
+  - Learning log: LEARNING_LOG.md

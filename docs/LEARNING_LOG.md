@@ -2,7 +2,7 @@
 
 A running journal of this project as a learning vehicle (C++, computer graphics,
 and molecular/subatomic physics). Newest entries on top. Maintained together by
-Matei and Claude — see [`CLAUDE.md`](../CLAUDE.md) for how we work.
+Matei and Claude — see `CLAUDE.md` (local, gitignored) for how we work.
 
 Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust/Zig seed
 
@@ -18,6 +18,41 @@ Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust
 **Open questions:** things to revisit.
 **Next:** the next concrete step.
 ```
+
+---
+
+## 2026-07-03 — Knowledge-base site (MkDocs Material), exercises 001–002
+
+**Did:**
+- Decided the interaction workflow: learning content lives in a local **MkDocs
+  Material** site (searchable, MathJax formulas, media/links), chat stays terse.
+  Set it up: `mkdocs.yml`, venv (`.venv/`, gitignored), learning hub at
+  `docs/learning/`. Run with `.\.venv\Scripts\mkdocs.exe serve`.
+- Wrote the first physics note: `docs/learning/physics/lennard-jones.md` —
+  including a finding: `ForceCalculator.cpp` mixes ε with an **arithmetic** mean
+  where the Berthelot rule is **geometric** (overestimates cross-species
+  attraction).
+- Resurrected the lost asset-helper exercise as a proper page.
+
+**Learned:**
+- 🔬 LJ deep-dive: where r⁻⁶ (London dispersion, derived) vs r⁻¹² (computational
+  convenience) come from; force-over-r trick avoiding `normalize()`;
+  Lorentz–Berthelot mixing rules.
+
+**Exercises:** 🧩 **001 — doctest test target** (open) · 🧩 **002 — asset path
+helper** (open, blocked on 001). Specs in `docs/learning/exercises/`.
+
+**Open questions:**
+- ε-mixing: switch to geometric mean or document the deviation? (thesis-relevant)
+- `Molecular/vendor/imgui` has an untracked-by-upstream `CMakeLists.txt` staged
+  *inside the submodule* — the root build depends on it, so **fresh clones are
+  broken**. Move it out (e.g. build ImGui sources from `Molecular/CMakeLists.txt`
+  or a sibling dir).
+
+**Next:**
+- Matei: push the 3 pending commits; commit the Sandbox3D layer toggle; do 001.
+- Fix the imgui CMakeLists placement.
+- Wire `Physics3D` particles into `Sandbox3D::OnUpdate` (spheres, not boxes).
 
 ---
 

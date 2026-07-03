@@ -21,3 +21,7 @@ cmake-*/
 #CLAUDE
 CLAUDE.md
 .claude
+
+# Python venv (mkdocs) and built site
+.venv/
+site/
