@@ -30,6 +30,34 @@ theme:
     - toc.follow
 
 plugins:
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: ro
+          name: Română
+          build: true
+          nav_translations:
+            Home: Acasă
+            Project docs: Documentația proiectului
+            Architecture: Arhitectură
+            Engine: Motorul (engine)
+            Physics 2D: Fizică 2D
+            Physics 3D: Fizică 3D
+            Building & running: Compilare și rulare
+            Status & roadmap: Stadiu și plan
+            Learning: Învățare
+            How this works: Cum funcționează
+            Physics: Fizică
+            Lennard-Jones potential: Potențialul Lennard-Jones
+            Exercises: Exerciții
+            001 — doctest test target: 001 — ținta de teste doctest
+            002 — asset path helper: 002 — helper pentru căi de asset-uri
+            Learning log: Jurnal de învățare
   - search
 
 markdown_extensions:

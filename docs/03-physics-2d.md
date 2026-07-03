@@ -46,6 +46,11 @@ with combining rules `ε = (εₐ+ε_b)/2`, `σ = (σₐ+σ_b)/2`, a small softe
 term added to `r`, and force-magnitude clamping to `±m_maxForce` (default
 `1e3`) for numerical stability.
 
+> See also the learning note on the
+> [Lennard-Jones potential](learning/physics/lennard-jones.md) — including the
+> observation that the arithmetic ε mixing deviates from the standard
+> Berthelot rule (geometric mean).
+
 ### Coulomb — electrostatic
 
 ```

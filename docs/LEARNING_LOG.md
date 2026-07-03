@@ -33,6 +33,9 @@ Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust
   where the Berthelot rule is **geometric** (overestimates cross-species
   attraction).
 - Resurrected the lost asset-helper exercise as a proper page.
+- Made the site **bilingual (EN/RO)** via `mkdocs-static-i18n`: every page has
+  a `.ro.md` sibling, language switcher in the header, untranslated pages fall
+  back to English. All 11 pages translated (LEARNING_LOG stays EN-only).
 
 **Learned:**
 - 🔬 LJ deep-dive: where r⁻⁶ (London dispersion, derived) vs r⁻¹² (computational
