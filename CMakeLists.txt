@@ -21,6 +21,9 @@ add_subdirectory(Molecular/vendor/imgui)
 # stb_image is header-only / single compilation unit — compiled directly
 # into Molecular via GLOB, so it must NOT also be a separate subdirectory.
 
+enable_testing()
+
 # Project targets
 add_subdirectory(Molecular)
 add_subdirectory(Sandbox)
+add_subdirectory(tests)
