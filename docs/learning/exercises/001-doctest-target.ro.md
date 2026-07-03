@@ -1,6 +1,6 @@
 # 🧩 Exercițiul 001 — Configurarea țintei de teste doctest
 
-**Stadiu:** 🔴 deschis · dat pe 2026-07-03
+**Stadiu:** ✅ gata · dat și finalizat pe 2026-07-03
 **Concepte:** graful de ținte CMake · CTest · doctest · disciplina roșu→verde
 
 Toate exercițiile viitoare vin ca teste doctest compilate, așa că primul

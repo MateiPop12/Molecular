@@ -1,6 +1,6 @@
 # 🧩 Exercise 001 — Set up the doctest test target
 
-**Status:** 🔴 open · assigned 2026-07-03
+**Status:** ✅ done · assigned & completed 2026-07-03
 **Concepts:** CMake target graph · CTest · doctest · red→green discipline
 
 Every future exercise ships as compiled doctest tests, so the harness itself is

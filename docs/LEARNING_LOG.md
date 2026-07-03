@@ -42,8 +42,10 @@ Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust
   convenience) come from; force-over-r trick avoiding `normalize()`;
   Lorentz–Berthelot mixing rules.
 
-**Exercises:** 🧩 **001 — doctest test target** (open) · 🧩 **002 — asset path
-helper** (open, blocked on 001). Specs in `docs/learning/exercises/`.
+**Exercises:** 🧩 **001 — doctest test target** — ✅ **completed & reviewed**
+(took ~4 review cycles: link-vs-include concept, `add_test` registration, then
+RAII — `new`/`delete` → explicit destructor call → stack object). 🧩 **002 —
+asset path helper** (open, now unblocked). Specs in `docs/learning/exercises/`.
 
 **Open questions:**
 - ε-mixing: switch to geometric mean or document the deviation? (thesis-relevant)

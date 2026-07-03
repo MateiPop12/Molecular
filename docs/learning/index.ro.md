@@ -49,5 +49,5 @@ se urmărește în tabelul de mai jos și se verifică la începutul fiecărei s
 
 | # | Exercițiu | Dat | Stadiu |
 | --- | --- | --- | --- |
-| 001 | [ținta de teste doctest](exercises/001-doctest-target.md) | 2026-07-03 | 🔴 deschis |
-| 002 | [helper pentru căi de asset-uri](exercises/002-asset-path-helper.md) | 2026-07-03 | 🔴 deschis (blocat de 001) |
+| 001 | [ținta de teste doctest](exercises/001-doctest-target.md) | 2026-07-03 | ✅ gata (2026-07-03) |
+| 002 | [helper pentru căi de asset-uri](exercises/002-asset-path-helper.md) | 2026-07-03 | 🔴 deschis |
