@@ -59,6 +59,7 @@ plugins:
             001 — doctest test target: 001 — ținta de teste doctest
             002 — asset path helper: 002 — helper pentru căi de asset-uri
             Learning log: Jurnal de învățare
+            Ideas & tooling: Idei și unelte
   - search
 
 markdown_extensions:
@@ -105,3 +106,4 @@ nav:
           - "001 — doctest test target": learning/exercises/001-doctest-target.md
           - "002 — asset path helper": learning/exercises/002-asset-path-helper.md
   - Learning log: LEARNING_LOG.md
+  - Ideas & tooling: IDEAS.md
