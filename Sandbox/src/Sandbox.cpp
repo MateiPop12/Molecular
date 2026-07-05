@@ -5,6 +5,7 @@
 #include "Sandbox2D.h"
 #include "Sandbox3D.h"
 #include "../../Molecular/vendor/imgui/imgui.h"
+#include "Molecular/Core/Assets.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include "Molecular/Core/EntryPoint.h"
@@ -163,10 +164,10 @@ public:
 		)";
 
 		//m_textureShader = Molecular::Shader::Create("TextureShader",textureShaderVertexSrc, textureShaderFragmentSrc);
-		auto textureShader = m_shaderLibrary.Load(MOL_ASSETS_DIR "/shaders/Texture.glsl");
+		auto textureShader = m_shaderLibrary.Load(Molecular::Assets::Path("shaders/Texture.glsl").string());
 
-		m_Texture = Molecular::Texture2D::Create(MOL_ASSETS_DIR "/textures/Checkerboard.png");
-		m_ChernoLogoTexture = Molecular::Texture2D::Create(MOL_ASSETS_DIR "/textures/ChernoLogo.png");
+		m_Texture = Molecular::Texture2D::Create(Molecular::Assets::Path("textures/Checkerboard.png").string());
+		m_ChernoLogoTexture = Molecular::Texture2D::Create(Molecular::Assets::Path("textures/ChernoLogo.png").string());
 
 
 		std::dynamic_pointer_cast<Molecular::OpenGLShader>(textureShader)->Bind();

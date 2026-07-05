@@ -5,6 +5,7 @@
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "VertexArray.h"
+#include "Molecular/Core/Assets.h"
 
 namespace Molecular
 {
@@ -94,7 +95,7 @@ namespace Molecular
         uint32_t whiteTextureData = 0xffffffff;
         rendererStorage->whiteTexture->SetData(&whiteTextureData, sizeof(whiteTextureData));
 
-        rendererStorage->quadShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Texture.glsl");
+        rendererStorage->quadShader = Shader::Create(Assets::Path("shaders/Texture.glsl").string());
         rendererStorage->quadShader->Bind();
         rendererStorage->quadShader->SetInt("u_Texture", 0);
     }

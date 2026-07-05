@@ -51,8 +51,8 @@ target_compile_definitions(Molecular PRIVATE
 
 # Absolute path to the runtime assets directory, baked in at configure time so
 # the executable locates shaders/textures regardless of the working directory.
-# PUBLIC so Sandbox (and anything else linking Molecular) inherits it too.
-target_compile_definitions(Molecular PUBLIC
+# PRIVATE (only Assets.cpp may see the macro; everyone else goes through Molecular::Assets)
+target_compile_definitions(Molecular PRIVATE
         MOL_ASSETS_DIR="${CMAKE_SOURCE_DIR}/Sandbox/assets"
 )
 

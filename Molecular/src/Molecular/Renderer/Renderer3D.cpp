@@ -6,6 +6,7 @@
 #include "RenderCommand.h"
 #include "Shader.h"
 #include "VertexArray.h"
+#include "Core/Assets.h"
 
 namespace Molecular
 {
@@ -160,8 +161,8 @@ namespace Molecular
         renderer3DStorage->boxVertexArray->SetIndexBuffer(boxIB);
 
         // ---------------- SHADER SETUP ----------------
-        renderer3DStorage->sphereShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Sphere.glsl");
-        renderer3DStorage->boxShader = Shader::Create(MOL_ASSETS_DIR "/shaders/Box.glsl");
+        renderer3DStorage->sphereShader = Shader::Create(Assets::Path("shaders/Sphere.glsl").string());
+        renderer3DStorage->boxShader = Shader::Create(Assets::Path("shaders/Box.glsl").string());
     }
 
     void Renderer3D::Shutdown()
