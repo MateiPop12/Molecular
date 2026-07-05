@@ -1,6 +1,6 @@
 # 🧩 Exercițiul 002 — Helper pentru căi de asset-uri
 
-**Stadiu:** 🔴 deschis · dat pe 2026-07-03 · **blocat de [001](001-doctest-target.md)**
+**Stadiu:** ✅ gata · dat pe 2026-07-03 · finalizat pe 2026-07-05
 **Concepte:** `std::filesystem` · `std::string_view` · design de API · granițe defensive
 
 *(Acesta este exercițiul din sesiunea de 2026-06-27 care înainte exista doar în
@@ -110,11 +110,20 @@ există cu adevărat înainte să dai vina pe implementarea ta.
 
 ## Prag de acceptare
 
-- [ ] Toate testele de mai sus trec (și ai văzut măcar unul picând mai întâi).
-- [ ] `MOL_ASSETS_DIR` apare în exact un `.cpp` din tot repo-ul
+- [x] Toate testele de mai sus trec (și ai văzut măcar unul picând mai întâi).
+- [x] `MOL_ASSETS_DIR` apare în exact un `.cpp` din tot repo-ul
       (`git grep MOL_ASSETS_DIR` ca dovadă — definiția din CMake nu se pune).
-- [ ] Sandbox-ul încă rulează și randează (asset-urile chiar se încarcă prin helper).
-- [ ] Review-ul lui Claude e curat: denumiri, const-correctness, fără copii
+- [x] Sandbox-ul încă rulează și randează (asset-urile chiar se încarcă prin helper).
+- [x] Review-ul lui Claude e curat: denumiri, const-correctness, fără copii
       inutile, mesaje de eroare cu sens.
 
 Titlu de commit sugerat: `refactor: centralize asset paths in Assets helper`.
+
+---
+
+**Rezultat (2026-07-05):** livrat în `a94690d`. API-ul final e *mai strict*
+decât specificația: respinge și intrările **goale**, **root-relative** (`/x`)
+și **drive-relative** (`C:x`) — clase de căi specifice Windows pe care
+specificația originală le-a ratat. `tests/assets_path_tests.cpp` (9 cazuri)
+este comportamentul de referință, iar `MOL_ASSETS_DIR` e acum `PRIVATE`, deci
+regula „o singură unitate de compilare" e impusă de compilator.

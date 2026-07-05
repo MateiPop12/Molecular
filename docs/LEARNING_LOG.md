@@ -21,6 +21,60 @@ Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust
 
 ---
 
+## 2026-07-05 — Exercise 002 done (Assets helper); Claude Code session skills
+
+**Did:**
+- 🧩 Completed **002 — asset path helper**: new `Molecular::Assets` API
+  (`Root`/`Path`/`Exists`) in `Molecular/Core`; all call sites in
+  `Renderer2D.cpp`, `Renderer3D.cpp`, `Sandbox.cpp` now resolve assets through
+  it. `MOL_ASSETS_DIR` is `PRIVATE` to the Molecular target and referenced in
+  exactly one TU — **compiler-enforced**, not convention. Shipped in `a94690d`.
+- Built three local Claude Code skills (`.claude/skills/`, gitignored):
+  `/kickoff` (start-of-session briefing), `/new-exercise` (scaffold spec + RO +
+  nav + doctest file), `/serve-docs` (check/restart the MkDocs server).
+
+**Learned:**
+- A function-local `static` initializes **once, with the first call's
+  argument** — right for caching argument-independent values (`Root`), a
+  first-call-wins bug in argument-dependent ones (`Path` froze the first path).
+- `std::filesystem::path` implicitly converts only to its *native* string type
+  (`std::wstring` on Windows); `.string()` is deliberately explicit because
+  narrowing depends on encoding. The same line compiles silently on Linux —
+  a portability trap.
+- Windows path taxonomy: absolute (`C:/x`), root-relative (`/x` — **not**
+  absolute, `has_root_directory()` only), drive-relative (`C:x` — neither,
+  `has_root_name()` only). `operator/` *replaces* the left side when the right
+  has a root directory or a different root name.
+- `||`/`&&` short-circuiting is a **sequencing guarantee**: the guard goes in
+  the left operand (`check.empty() || *check.begin() == ".."`). Had UB
+  (dereferencing an empty path's begin iterator) hiding behind green tests.
+- **Green tests are evidence, not proof** — the drive-relative hole and the UB
+  both passed the original suite; reasoning found them, not the tests.
+- LNK2019 anatomy: the compiler trusts declarations per-TU, the linker pays the
+  debts. Unresolved external = no definition, file missing from the link, or
+  signature mismatch (mangled names encode the full signature).
+- CLion debugging: doctest gutter icons, F7/F8/Shift+F8, Evaluate Expression;
+  `MolecularTests.exe -s` prints expanded values even for passing CHECKs.
+
+**Exercises:** 🧩 **002 — asset path helper** — ✅ **completed & reviewed**
+(cycles: `current_path()` → macro; frozen `static`; drive-relative escape +
+empty-path UB; guard ordering; `PUBLIC` → `PRIVATE` enforcement).
+
+**Open questions:**
+- imgui submodule still carries an untracked `CMakeLists.txt` → fresh clones
+  broken (unchanged since 2026-07-03 — now the oldest debt on the books).
+- `LNK4098: LIBCMTD conflicts` when linking `Sandbox.exe` — CRT runtime
+  mismatch in a vendored lib; investigate.
+- ε-mixing (arithmetic vs geometric Berthelot) in `ForceCalculator.cpp` —
+  still undecided, thesis-relevant.
+
+**Next:**
+- Fix the imgui `CMakeLists.txt` placement (top candidate for next session).
+- Wire `Physics3D` particles into `Sandbox3D::OnUpdate` (spheres, not boxes).
+- 🧩 003 — scaffold with `/new-exercise` once the topic is picked.
+
+---
+
 ## 2026-07-03 — Knowledge-base site (MkDocs Material), exercises 001–002
 
 **Did:**

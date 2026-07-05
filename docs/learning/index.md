@@ -44,4 +44,4 @@ session.
 | # | Exercise | Assigned | Status |
 | --- | --- | --- | --- |
 | 001 | [doctest test target](exercises/001-doctest-target.md) | 2026-07-03 | ✅ done (2026-07-03) |
-| 002 | [asset path helper](exercises/002-asset-path-helper.md) | 2026-07-03 | 🔴 open |
+| 002 | [asset path helper](exercises/002-asset-path-helper.md) | 2026-07-03 | ✅ done (2026-07-05) |

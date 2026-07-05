@@ -1,6 +1,6 @@
 # 🧩 Exercise 002 — Asset path helper
 
-**Status:** 🔴 open · assigned 2026-07-03 · **blocked on [001](001-doctest-target.md)**
+**Status:** ✅ done · assigned 2026-07-03 · completed 2026-07-05
 **Concepts:** `std::filesystem` · `std::string_view` · API design · defensive boundaries
 
 *(This is the exercise from the 2026-06-27 session that previously existed only
@@ -110,11 +110,20 @@ actually exists before blaming your implementation.
 
 ## Acceptance bar
 
-- [ ] All tests above pass (and you watched at least one fail first).
-- [ ] `MOL_ASSETS_DIR` appears in exactly one `.cpp` in the whole repo
+- [x] All tests above pass (and you watched at least one fail first).
+- [x] `MOL_ASSETS_DIR` appears in exactly one `.cpp` in the whole repo
       (`git grep MOL_ASSETS_DIR` to prove it — the CMake definition doesn't count).
-- [ ] Sandbox still runs and renders (assets actually load through the helper).
-- [ ] Claude's review pass is clean: naming, const-correctness, no needless
+- [x] Sandbox still runs and renders (assets actually load through the helper).
+- [x] Claude's review pass is clean: naming, const-correctness, no needless
       copies, sensible error messages.
 
 Suggested commit title: `refactor: centralize asset paths in Assets helper`.
+
+---
+
+**Outcome (2026-07-05):** shipped in `a94690d`. The final API is *stricter*
+than this spec: it also rejects **empty**, **root-relative** (`/x`), and
+**drive-relative** (`C:x`) inputs — Windows-specific path classes the original
+spec missed. `tests/assets_path_tests.cpp` (9 cases) is the authoritative
+behaviour, and `MOL_ASSETS_DIR` is now `PRIVATE`, so the one-TU rule is
+enforced by the compiler.
