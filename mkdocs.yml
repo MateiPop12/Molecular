@@ -52,6 +52,7 @@ plugins:
             Status & roadmap: Stadiu și plan
             Learning: Învățare
             How this works: Cum funcționează
+            Progress: Progres
             Physics: Fizică
             Lennard-Jones potential: Potențialul Lennard-Jones
             Exercises: Exerciții
@@ -97,6 +98,7 @@ nav:
       - Status & roadmap: 06-status-and-roadmap.md
   - Learning:
       - How this works: learning/index.md
+      - Progress: learning/progress.md
       - Physics:
           - Lennard-Jones potential: learning/physics/lennard-jones.md
       - Exercises:
