@@ -63,15 +63,21 @@ empty-path UB; guard ordering; `PUBLIC` → `PRIVATE` enforcement).
 **Open questions:**
 - imgui submodule still carries an untracked `CMakeLists.txt` → fresh clones
   broken (unchanged since 2026-07-03 — now the oldest debt on the books).
-- `LNK4098: LIBCMTD conflicts` when linking `Sandbox.exe` — CRT runtime
-  mismatch in a vendored lib; investigate.
+- ~~`LNK4098: LIBCMTD conflicts` when linking `Sandbox.exe`~~ — **diagnosed
+  same day** while scaffolding 003: the rogue imgui `CMakeLists.txt` forces
+  the *static* CRT (`MultiThreaded$<$<CONFIG:Debug>:Debug>`) against the
+  root's `MultiThreadedDebugDLL`. Fix is part of exercise 003.
 - ε-mixing (arithmetic vs geometric Berthelot) in `ForceCalculator.cpp` —
   still undecided, thesis-relevant.
 
 **Next:**
-- Fix the imgui `CMakeLists.txt` placement (top candidate for next session).
-- Wire `Physics3D` particles into `Sandbox3D::OnUpdate` (spheres, not boxes).
-- 🧩 003 — scaffold with `/new-exercise` once the topic is picked.
+- 🧩 **003 — ImGui build fix** (scaffolded, open): kills the fresh-clone
+  breakage *and* `LNK4098` in one move. Consolidation exercise, target ≤ H1.
+- 🧩 **004 — Physics3D wiring** (scaffolded, open, after 003): includes
+  fixing a real **unit bug found while scaffolding** — the integrator adds
+  metre displacements onto femtometre positions (off by 10¹⁵). Test suite
+  written and verified: 9 cases green against today's core, the
+  unit-consistency case red, as designed.
 
 ---
 

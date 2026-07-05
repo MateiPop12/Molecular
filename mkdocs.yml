@@ -58,6 +58,8 @@ plugins:
             Exercises: Exerciții
             001 — doctest test target: 001 — ținta de teste doctest
             002 — asset path helper: 002 — helper pentru căi de asset-uri
+            003 — ImGui build fix: 003 — repararea build-ului ImGui
+            004 — Physics3D wiring: 004 — Physics3D în Sandbox3D
             Learning log: Jurnal de învățare
             Ideas & tooling: Idei și unelte
   - search
@@ -105,5 +107,7 @@ nav:
       - Exercises:
           - "001 — doctest test target": learning/exercises/001-doctest-target.md
           - "002 — asset path helper": learning/exercises/002-asset-path-helper.md
+          - "003 — ImGui build fix": learning/exercises/003-imgui-build-fix.md
+          - "004 — Physics3D wiring": learning/exercises/004-physics3d-wiring.md
   - Learning log: LEARNING_LOG.md
   - Ideas & tooling: IDEAS.md
