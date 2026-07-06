@@ -21,15 +21,14 @@ target_include_directories(Molecular
         ${CMAKE_SOURCE_DIR}/Molecular/src/Molecular
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/spdlog/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glm/glm
-        ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui
-        ${CMAKE_SOURCE_DIR}/Molecular/vendor/imgui/backends
         PRIVATE
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glfw/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/glad/include
         ${CMAKE_SOURCE_DIR}/Molecular/vendor/stb_image
 )
 
-target_link_libraries(Molecular PRIVATE glfw glad ImGui opengl32)
+target_link_libraries(Molecular PRIVATE glfw glad opengl32)
+target_link_libraries(Molecular PUBLIC ImGui)
 
 if(WIN32)
     target_compile_definitions(Molecular PRIVATE

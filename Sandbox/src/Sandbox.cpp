@@ -4,7 +4,7 @@
 #include "Molecular.h"
 #include "Sandbox2D.h"
 #include "Sandbox3D.h"
-#include "../../Molecular/vendor/imgui/imgui.h"
+#include "imgui.h"
 #include "Molecular/Core/Assets.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 

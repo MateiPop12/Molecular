@@ -1,7 +1,7 @@
 #include "../../molpch.h"
 #include "App.h"
 
-#include "../../../vendor/imgui/imgui.h"
+#include "imgui.h"
 #include "Log.h"
 #include "../../../vendor/glfw/include/GLFW/glfw3.h"
 #include "Core.h"

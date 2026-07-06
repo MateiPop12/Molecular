@@ -17,7 +17,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin-int/${OUTPUT_DIR})
 # Vendor libraries
 add_subdirectory(Molecular/vendor/glfw)
 add_subdirectory(Molecular/vendor/glad)
-add_subdirectory(Molecular/vendor/imgui)
+add_subdirectory(Molecular/vendor/imgui-build)
 # stb_image is header-only / single compilation unit — compiled directly
 # into Molecular via GLOB, so it must NOT also be a separate subdirectory.
 

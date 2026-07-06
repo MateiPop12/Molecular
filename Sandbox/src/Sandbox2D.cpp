@@ -1,6 +1,6 @@
 #include "Sandbox2D.h"
 
-#include "../../Molecular/vendor/imgui/imgui.h"
+#include "imgui.h"
 #include <random>
 
 Sandbox2D::Sandbox2D()
