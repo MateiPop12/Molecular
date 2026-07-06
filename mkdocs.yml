@@ -55,6 +55,8 @@ plugins:
             Progress: Progres
             Physics: Fizică
             Lennard-Jones potential: Potențialul Lennard-Jones
+            Graphics & architecture: Grafică și arhitectură
+            CMake targets & propagation: Ținte CMake și propagarea proprietăților
             Exercises: Exerciții
             001 — doctest test target: 001 — ținta de teste doctest
             002 — asset path helper: 002 — helper pentru căi de asset-uri
@@ -104,6 +106,8 @@ nav:
       - Progress: learning/progress.md
       - Physics:
           - Lennard-Jones potential: learning/physics/lennard-jones.md
+      - Graphics & architecture:
+          - CMake targets & propagation: learning/graphics/cmake-targets-and-propagation.md
       - Exercises:
           - "001 — doctest test target": learning/exercises/001-doctest-target.md
           - "002 — asset path helper": learning/exercises/002-asset-path-helper.md
