@@ -21,6 +21,55 @@ Legend: 🧩 exercise · 🔬 physics · 🎨 graphics/architecture · 🦀 Rust
 
 ---
 
+## 2026-07-06 — Exercise 003 done (ImGui build fix); fresh clones finally work
+
+**Did:**
+- 🧩 Completed **003 — ImGui build fix**: the `ImGui` target now lives in
+  tracked `Molecular/vendor/imgui-build/`, the imgui submodule is pristine
+  (the two-session `m` smudge is gone), include dirs are exported by the
+  target itself, and `Molecular` links it `PUBLIC` — every consumer now
+  writes plain `#include "imgui.h"`. Deleted the dead `aditional_resurce/`
+  copy of the old rogue CMakeLists. Shipped in `1733caa` (+ propagation note
+  in `6244b00`).
+- ✅ **Acceptance proven from a fresh clone**: `git clone --recurse-submodules`
+  → configure → build `MolecularTests` + `Sandbox` with zero manual steps,
+  no `LNK4098`; doctest suite 11/11 in the fresh clone.
+
+**Learned:**
+- Relative paths in `target_include_directories` resolve against
+  **`CMAKE_CURRENT_SOURCE_DIR`** — the directory of the list file being
+  processed. Both wrong guesses (`imgui`, `vendor`) came from never asking
+  *"relative to what?"*
+- A wrong PUBLIC include dir can hide behind a green build indefinitely:
+  quoted includes search the including file's directory first, and another
+  target's hardcoded dirs can carry every consumer. Echo of 002's lesson —
+  green is evidence, not proof.
+- Unity includes move the TU boundary: `ImGuiBuild.cpp` *is* the backend's
+  translation unit, so also compiling `imgui_impl_glfw.cpp` in ImGui.lib
+  would define every backend symbol twice → LNK2005 at link.
+- `PRIVATE` vs `PUBLIC` in `target_link_libraries` decides whether a
+  dependency's usage requirements reach *your* consumers — Sandbox sees
+  imgui.h only because Molecular links ImGui `PUBLIC`. (Solved solo.)
+- `${CMAKE_BUILD_TYPE}` is **empty** under multi-config generators (VS);
+  per-config output paths come from the generator, not that variable.
+
+**Exercises:** 🧩 **003 — ImGui build fix** — ✅ **completed & reviewed**
+(3 cycles, peak H4 on include-path mechanics only; the propagation re-test
+was met solo — see the scorecard footnote).
+
+**Open questions:**
+- Pre-existing `warning C4312` in `OpenGLVertexArray.cpp:63`
+  (`uint32_t` → `void*` cast) — surfaced during rebuilds; fix in a hygiene
+  pass.
+
+**Next:**
+- 🧩 **004 — Physics3D wiring** (spec scaffolded, now unblocked):
+  `tests/physics3d_tests.cpp` is waiting; consolidation rules apply.
+- Matei: report time spent on 003 for the scorecard (*t.b.r.* cell).
+- Commit the bookkeeping: `docs: close out exercise 003`.
+
+---
+
 ## 2026-07-05 — Exercise 002 done (Assets helper); Claude Code session skills
 
 **Did:**

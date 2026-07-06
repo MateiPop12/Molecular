@@ -45,5 +45,5 @@ session.
 | --- | --- | --- | --- |
 | 001 | [doctest test target](exercises/001-doctest-target.md) | 2026-07-03 | ✅ done (2026-07-03) |
 | 002 | [asset path helper](exercises/002-asset-path-helper.md) | 2026-07-03 | ✅ done (2026-07-05) |
-| 003 | [ImGui build fix](exercises/003-imgui-build-fix.md) | 2026-07-05 | 🔴 open |
-| 004 | [Physics3D wiring](exercises/004-physics3d-wiring.md) | 2026-07-05 | 🔴 open (after 003) |
+| 003 | [ImGui build fix](exercises/003-imgui-build-fix.md) | 2026-07-05 | ✅ done (2026-07-06) |
+| 004 | [Physics3D wiring](exercises/004-physics3d-wiring.md) | 2026-07-05 | 🔴 open |

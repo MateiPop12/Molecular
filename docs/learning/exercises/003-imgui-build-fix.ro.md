@@ -1,6 +1,6 @@
 # 🧩 Exercițiul 003 — Repararea build-ului ImGui (clone proaspete + CRT)
 
-**Stadiu:** 🔴 deschis · dat pe 2026-07-05
+**Stadiu:** ✅ gata · dat pe 2026-07-05 · finalizat pe 2026-07-06
 **Concepte:** definirea țintelor CMake & vizibilitate *(re-testează 001/002 — țintă ≤ H1)* · dependențe vendored & igiena submodulelor · modelul CRT runtime MSVC
 
 ## Motivație
@@ -69,11 +69,13 @@ cmake -S . -B build -G "Visual Studio 17 2022"
 cmake --build build --target MolecularTests
 ```
 
-- [ ] Clona proaspătă se configurează și se compilează fără pași manuali.
-- [ ] `LNK4098` nu mai apare la link-ul lui `Sandbox.exe` (rebuild complet).
-- [ ] `git status` în acest repo arată submodulul imgui curat — pata `m`
+- [x] Clona proaspătă se configurează și se compilează fără pași manuali.
+      *(verificat 2026-07-06 — clonă → configurare → build `MolecularTests` +
+      `Sandbox`, doctest 11/11 în clona proaspătă)*
+- [x] `LNK4098` nu mai apare la link-ul lui `Sandbox.exe` (rebuild complet).
+- [x] `git status` în acest repo arată submodulul imgui curat — pata `m`
       dispare definitiv.
-- [ ] Review-ul lui Claude e curat.
+- [x] Review-ul lui Claude e curat (3 cicluri).
 
 Fără fișier doctest aici — ca la 001, sistemul de build *este* exercițiul,
 iar clona proaspătă e testul.

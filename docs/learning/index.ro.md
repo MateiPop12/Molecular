@@ -51,5 +51,5 @@ se urmărește în tabelul de mai jos și se verifică la începutul fiecărei s
 | --- | --- | --- | --- |
 | 001 | [ținta de teste doctest](exercises/001-doctest-target.md) | 2026-07-03 | ✅ gata (2026-07-03) |
 | 002 | [helper pentru căi de asset-uri](exercises/002-asset-path-helper.md) | 2026-07-03 | ✅ gata (2026-07-05) |
-| 003 | [repararea build-ului ImGui](exercises/003-imgui-build-fix.md) | 2026-07-05 | 🔴 deschis |
-| 004 | [Physics3D în Sandbox3D](exercises/004-physics3d-wiring.md) | 2026-07-05 | 🔴 deschis (după 003) |
+| 003 | [repararea build-ului ImGui](exercises/003-imgui-build-fix.md) | 2026-07-05 | ✅ gata (2026-07-06) |
+| 004 | [Physics3D în Sandbox3D](exercises/004-physics3d-wiring.md) | 2026-07-05 | 🔴 deschis |

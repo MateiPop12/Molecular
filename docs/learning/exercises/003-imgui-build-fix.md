@@ -1,6 +1,6 @@
 # 🧩 Exercise 003 — ImGui build fix (fresh clones + CRT)
 
-**Status:** 🔴 open · assigned 2026-07-05
+**Status:** ✅ done · assigned 2026-07-05 · completed 2026-07-06
 **Concepts:** CMake target definition & visibility *(re-tests 001/002 — target ≤ H1)* · vendored dependencies & submodule hygiene · MSVC CRT runtime model
 
 ## Motivation
@@ -66,11 +66,13 @@ cmake -S . -B build -G "Visual Studio 17 2022"
 cmake --build build --target MolecularTests
 ```
 
-- [ ] Fresh clone configures and builds with zero manual steps.
-- [ ] `LNK4098` no longer appears when linking `Sandbox.exe` (full rebuild).
-- [ ] `git status` in this repo shows the imgui submodule clean — the `m`
+- [x] Fresh clone configures and builds with zero manual steps.
+      *(verified 2026-07-06 — clone → configure → build `MolecularTests` +
+      `Sandbox`, doctest 11/11 in the fresh clone)*
+- [x] `LNK4098` no longer appears when linking `Sandbox.exe` (full rebuild).
+- [x] `git status` in this repo shows the imgui submodule clean — the `m`
       smudge is gone for good.
-- [ ] Claude's review pass is clean.
+- [x] Claude's review pass is clean (3 cycles).
 
 No doctest file for this one — like 001, the build system *is* the exercise,
 and the fresh clone is the test.
