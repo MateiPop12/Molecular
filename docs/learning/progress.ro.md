@@ -53,7 +53,7 @@ Un rând per exercițiu, completat de Claude la acceptarea review-ului.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 001 | [ținta de teste doctest](exercises/001-doctest-target.md) | 1 | 1 | ~2 h | 4 | H1 | 0 / 3 | CMake link-vs-include · RAII |
 | 002 | [helper pentru căi de asset-uri](exercises/002-asset-path-helper.md) | 3 | 2 | ~3 h | 4 | H3 | 1\* / 3 | semantica inițializării `static` · ordinea gărzilor la scurtcircuit · citirea erorilor de linker |
-| 003 | [repararea build-ului ImGui](exercises/003-imgui-build-fix.md) | 2 | 2 | *de raportat* | 3 | H4† | 0 / 3 | rezolvarea căilor relative în fișierele CMake · unity include & simboluri duplicate |
+| 003 | [repararea build-ului ImGui](exercises/003-imgui-build-fix.md) | 2 | 2 | ~2 h | 3 | H4† | 0 / 3 | rezolvarea căilor relative în fișierele CMake · unity include & simboluri duplicate |
 
 \* găsit cu debugger-ul într-o sesiune ghidată — se pune, dar cu asterisc.
 

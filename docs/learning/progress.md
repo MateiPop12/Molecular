@@ -51,7 +51,7 @@ self-reported by Matei (0.5 h granularity is plenty).
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 001 | [doctest target](exercises/001-doctest-target.md) | 1 | 1 | ~2 h | 4 | H1 | 0 / 3 | CMake link-vs-include · RAII |
 | 002 | [asset path helper](exercises/002-asset-path-helper.md) | 3 | 2 | ~3 h | 4 | H3 | 1\* / 3 | `static` init semantics · short-circuit guard ordering · reading linker errors |
-| 003 | [ImGui build fix](exercises/003-imgui-build-fix.md) | 2 | 2 | *t.b.r.* | 3 | H4† | 0 / 3 | relative-path resolution in CMake list files · unity includes & duplicate symbols |
+| 003 | [ImGui build fix](exercises/003-imgui-build-fix.md) | 2 | 2 | ~2 h | 3 | H4† | 0 / 3 | relative-path resolution in CMake list files · unity includes & duplicate symbols |
 
 \* found with the debugger during a guided session — counts, but with an
 asterisk.

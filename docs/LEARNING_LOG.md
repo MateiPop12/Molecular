@@ -65,7 +65,6 @@ was met solo — see the scorecard footnote).
 **Next:**
 - 🧩 **004 — Physics3D wiring** (spec scaffolded, now unblocked):
   `tests/physics3d_tests.cpp` is waiting; consolidation rules apply.
-- Matei: report time spent on 003 for the scorecard (*t.b.r.* cell).
 - Commit the bookkeeping: `docs: close out exercise 003`.
 
 ---
