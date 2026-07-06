@@ -66,6 +66,36 @@ fizică pe cadru îți permiți și ce înseamnă „viteza simulării" în UI.
   număr de particule live. (Un panou complet care oglindește 2D-ul *nu* e în
   scop — ăla e un exercițiu ulterior.)
 
+## Verifică-te pe parcurs
+
+Puncte de control explicite — o parte e *gata când comanda arată rezultatul*,
+nu când codul pare corect (lecția lui 003).
+
+- **Pasul 0 (roșu) — verifică cu:** adaugă `physics3d_tests.cpp` la
+  `target_sources` în `tests/CMakeLists.txt:7`, recompilează și rulează
+  `MolecularTests.exe`. Gata când **exact un** caz pică — *„unit consistency —
+  electron falls the right DISTANCE"*. Zero sau două-plus căderi: oprește-te
+  și recitește partea A înainte să atingi ceva.
+- **Partea A (verde) — verifică cu:** `MolecularTests.exe -tc="*unit*"`
+  (filtrul de test-case al doctest) trece pe verde, apoi rularea completă
+  rămâne 100%. Gata doar când comentariul cu convenția există în **ambele**
+  `Molecular/src/Molecular/Physics3D/Integrator.h` și
+  `Molecular/src/Molecular/Physics3D/PhysicsObject.h`, precizând unitatea
+  *fiecărei* mărimi stocate (poziție, viteză, accelerație, masă).
+- **Partea B — verifică cu:** cu simularea pornită, spawnează mai multe
+  particule și despawnează câteva: fără crash, fără particule înghețate în
+  zbor (una înghețată înseamnă că view-ul observator ține pointeri
+  învechiți). Și poți răspunde cu voce tare la ambele întrebări de review din
+  partea B — *vor* fi puse.
+- **Partea C — verifică cu:** comentariul cu derivarea din
+  `Sandbox/src/Sandbox3D.cpp` se termină cu un număr concret (un `dt` în
+  secunde), iar simularea se comportă identic la 30 FPS și la 144 FPS —
+  plafonează acumulatorul ca un cadru lent să nu spiraleze.
+- **Partea D — verifică cu:** pornește `Sandbox.exe`; spawnează un proton,
+  apoi un electron la ~100 fm → electronul accelerează vizibil spre proton;
+  pauza îngheață toată mișcarea; reset golește lumea; numărul live corespunde
+  mereu cu ce ai spawnat.
+
 ## Fișierul de teste
 
 `tests/physics3d_tests.cpp` — deja scris, **încă nelegat în ținta de teste**;

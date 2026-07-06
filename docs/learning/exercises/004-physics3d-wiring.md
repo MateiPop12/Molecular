@@ -64,6 +64,35 @@ and what "simulation speed" means in the UI.
   live particle count. (A full control panel mirroring 2D is *not* in scope —
   that's a later exercise.)
 
+## Check yourself as you go
+
+Explicit checkpoints — a part is *done when the command shows the outcome*,
+not when the code looks right (003's lesson).
+
+- **Step 0 (red) — check with:** add `physics3d_tests.cpp` to
+  `target_sources` in `tests/CMakeLists.txt:7`, rebuild and run
+  `MolecularTests.exe`. Done when **exactly one** case fails — *"unit
+  consistency — electron falls the right DISTANCE"*. Zero or two-plus
+  failures: stop and re-read part A before touching anything.
+- **Part A (green) — check with:** `MolecularTests.exe -tc="*unit*"`
+  (doctest's test-case filter) goes green, then the full run stays 100%.
+  Also done only when the convention comment exists in **both**
+  `Molecular/src/Molecular/Physics3D/Integrator.h` and
+  `Molecular/src/Molecular/Physics3D/PhysicsObject.h`, stating the unit of
+  *every* stored quantity (position, velocity, acceleration, mass).
+- **Part B — check with:** while the sim is running, spawn several particles
+  and despawn some: no crash, no particle freezing mid-flight (a frozen one
+  means the observer view holds stale pointers). And you can answer both
+  review questions in part B out loud — they *will* be asked.
+- **Part C — check with:** the derivation comment in
+  `Sandbox/src/Sandbox3D.cpp` ends in an actual number (a `dt` in seconds),
+  and the simulation behaves identically at 30 FPS and 144 FPS — cap the
+  accumulator so a slow frame can't spiral.
+- **Part D — check with:** launch `Sandbox.exe`; spawn a proton, then an
+  electron ~100 fm away → the electron visibly accelerates toward the proton;
+  pause freezes all motion; reset empties the world; the live count always
+  matches what you spawned.
+
 ## Test file
 
 `tests/physics3d_tests.cpp` — already written, **not yet wired into the test
