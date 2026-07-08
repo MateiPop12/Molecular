@@ -1,0 +1,12 @@
+# Third-party submodules — not our architecture
+Molecular/vendor/
+tests/vendor/
+
+# Generated / IDE / build output
+cmake-build-debug-visual-studio/
+site/
+.vs/
+.idea/
+.venv/
+bin/
+bin-int/

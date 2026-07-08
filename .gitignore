@@ -28,3 +28,6 @@ site/
 
 # ImGui runtime layout file
 imgui.ini
+
+# Graphify knowledge-graph output (generated; config .graphifyignore is tracked)
+graphify-out/
