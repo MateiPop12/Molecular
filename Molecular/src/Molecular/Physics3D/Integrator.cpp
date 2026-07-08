@@ -5,12 +5,13 @@ namespace Molecular
     // -----------------------------------------------------------------------
     // CalculateAcceleration
     // Sums the total pairwise force on 'obj' from every other object in
-    // 'others' (skipping self), then returns F/m (m/s²).
+    // 'others' (skipping self), then returns F/m (fm/s²).
     // -----------------------------------------------------------------------
-    glm::dvec3 Integrator::CalculateAcceleration(const PhysicsObject&               obj,
+    glm::dvec3 Integrator::CalculateAcceleration(const PhysicsObject& obj,
                                                   const std::vector<PhysicsObject*>& others,
-                                                  const ForceCalculator3D&             forceCalc)
+                                                  const ForceCalculator3D& forceCalc)
     {
+        constexpr double M_TO_FM = 1e15; // a: (m/s²) × (fm/m) = fm/s² — converts SI acceleration into the fm-based convention.
         glm::dvec3 totalForce(0.0);
 
         for (const PhysicsObject* other : others)
@@ -21,7 +22,7 @@ namespace Molecular
             totalForce += forceCalc.CalculateTotalForce(obj, *other);
         }
 
-        return totalForce / obj.GetMass(); // a = F / m  (m/s²)
+        return totalForce / obj.GetMass() * M_TO_FM; // a = (F / m) * M_TO_FM (fm/s²)
     }
 
     // -----------------------------------------------------------------------

@@ -21,10 +21,10 @@ namespace Molecular
 
     private:
         // Sum all pairwise forces on 'obj' from every other object, then
-        // divide by mass to get acceleration (m/s²).
+        // divide by mass to get acceleration (fm/s²).
         [[nodiscard]] static glm::dvec3 CalculateAcceleration(
-            const PhysicsObject&              obj,
+            const PhysicsObject& obj,
             const std::vector<PhysicsObject*>& others,
-            const ForceCalculator3D&             forceCalc);
+            const ForceCalculator3D& forceCalc);
     };
 }

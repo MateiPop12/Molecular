@@ -12,7 +12,7 @@ namespace Molecular
         [[nodiscard]] glm::dvec3 GetPositionD() const {return m_position;}
         [[nodiscard]] glm::dvec3 GetVelocityD() const {return m_velocity;}
         [[nodiscard]] double GetMass() const {return m_mass;}
-        [[nodiscard]] double     GetCharge()     const { return m_typeData->charge_C; }
+        [[nodiscard]] double GetCharge() const { return m_typeData->charge_C; }
 
         void SetPosition(const glm::dvec3& position) {m_position = position;}
         void SetVelocity(const glm::dvec3& velocity) {m_velocity = velocity;}
@@ -20,8 +20,8 @@ namespace Molecular
     private:
         ParticleType m_type;
         const ParticleTypeData* m_typeData;
-        glm::dvec3 m_position;
-        glm::dvec3 m_velocity;
-        double m_mass;
+        glm::dvec3 m_position; //femtometres
+        glm::dvec3 m_velocity; //femtometres / second
+        double m_mass;         //kilograms
     };
 }
